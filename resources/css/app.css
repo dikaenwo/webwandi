@@ -1,0 +1,236 @@
+@import "tailwindcss";
+
+/* ===================== HEADING NOW FONT ===================== */
+@font-face {
+    font-family: 'Heading Now';
+    src: url('/fonts/HeadingNowTrial-54Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Heading Now';
+    src: url('/fonts/HeadingNowTrial-55Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Heading Now';
+    src: url('/fonts/HeadingNowTrial-56Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Heading Now';
+    src: url('/fonts/HeadingNowTrial-57Extrabold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Heading Now';
+    src: url('/fonts/HeadingNowTrial-58Heavy.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@theme {
+    /* Tailwind will read these as arbitrary values later since we use bg-[var(--c-dk)] */
+    --font-sans: 'Inter', sans-serif;
+    --font-heading: 'Heading Now', 'Inter', sans-serif;
+    --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
+}
+
+:root, [data-theme="brown"], [data-theme="green"] {
+    --c-dk: #1E3830;
+    --c-md: #3F6A5D;
+    --c-lt: #7A9E95;
+    --c-bg: #F2F6F4;
+    --c-ac: #E3EDE9;
+    --c-md-lt: #528A79;
+}
+
+@layer base {
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--c-bg);
+        color: var(--c-dk);
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--c-bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--c-md);
+        border-radius: 10px;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply bg-[var(--c-dk)] text-[var(--c-bg)] px-6 py-3 rounded-2xl font-semibold text-sm tracking-wide hover:bg-[var(--c-md)] active:scale-95 transition-all duration-300 shadow-md hover:shadow-lg inline-flex items-center gap-2;
+    }
+
+    .btn-secondary {
+        @apply bg-[var(--c-bg)] text-[var(--c-dk)] border-2 border-[var(--c-dk)] px-6 py-3 rounded-2xl font-semibold text-sm tracking-wide hover:bg-[var(--c-dk)] hover:text-[var(--c-bg)] active:scale-95 transition-all duration-300 inline-flex items-center gap-2;
+    }
+
+    .btn-outline {
+        @apply bg-transparent text-[var(--c-md)] border border-[var(--c-lt)] px-5 py-2.5 rounded-xl font-medium text-sm hover:bg-[var(--c-lt)]/30 transition-all duration-200 inline-flex items-center gap-2;
+    }
+
+    .card {
+        @apply bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden;
+    }
+
+    .card-hover {
+        @apply hover:-translate-y-1 hover:shadow-lg transition-all duration-300;
+    }
+
+    .input-field {
+        @apply w-full bg-white border border-[var(--c-lt)] rounded-xl px-4 py-3 text-[var(--c-dk)] placeholder-[var(--c-lt)] focus:outline-none focus:ring-2 focus:ring-[var(--c-md)]/40 focus:border-[var(--c-md)] transition-all duration-200 text-sm;
+    }
+
+    .badge {
+        @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold;
+    }
+
+    .section-title {
+        @apply text-2xl md:text-3xl font-bold text-[var(--c-dk)] tracking-tight;
+    }
+
+    .section-subtitle {
+        @apply text-sm text-[var(--c-md)] mt-1;
+    }
+
+    .glass {
+        @apply bg-white/10 backdrop-blur-md border border-white/20;
+    }
+
+    .nav-link {
+        @apply text-sm font-medium text-[var(--c-dk)]/80 hover:text-[var(--c-dk)] transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-[var(--c-dk)] hover:after:w-full after:transition-all after:duration-300;
+    }
+
+    .category-chip {
+        @apply px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 cursor-pointer whitespace-nowrap;
+    }
+
+    .category-chip-active {
+        @apply bg-[var(--c-dk)] text-[var(--c-bg)] border-[var(--c-dk)];
+    }
+
+    .category-chip-inactive {
+        @apply bg-white text-[var(--c-md)] border-[var(--c-lt)] hover:border-[var(--c-md)] hover:text-[var(--c-dk)];
+    }
+
+    .sidebar-link {
+        @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer;
+    }
+
+    .sidebar-link-active {
+        @apply bg-white/10 text-white font-bold shadow-sm;
+    }
+
+    .sidebar-link-inactive {
+        @apply text-[var(--c-bg)]/70 hover:bg-white/10 hover:text-[var(--c-bg)];
+    }
+
+    .stat-card {
+        @apply bg-white rounded-2xl p-5 shadow-sm border border-[var(--c-lt)]/30;
+    }
+
+    .table-header {
+        @apply text-xs font-semibold text-[var(--c-md)] uppercase tracking-wider py-3 px-4;
+    }
+
+    .table-cell {
+        @apply py-3 px-4 text-sm text-[var(--c-dk)];
+    }
+
+    .status-badge-waiting {
+        @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700;
+    }
+
+    .status-badge-process {
+        @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700;
+    }
+
+    .status-badge-making {
+        @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700;
+    }
+
+    .status-badge-ready {
+        @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700;
+    }
+}
+
+@layer utilities {
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+
+    .text-gradient {
+        background: linear-gradient(135deg, var(--c-dk), var(--c-md));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .bg-hero {
+        background-image:
+            linear-gradient(160deg, rgba(20, 40, 34, 0.82) 0%, rgba(42, 68, 58, 0.78) 50%, rgba(63, 106, 93, 0.72) 100%),
+            url('/images/hero-background.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+    }
+
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .animate-pulse-slow {
+        animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+    }
+}
