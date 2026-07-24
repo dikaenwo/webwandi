@@ -3,15 +3,21 @@
 @section('title', 'Status Pesanan — Skena Coffee')
 @section('meta_description', 'Pantau status pesanan kopi kamu di Skena Coffee secara real-time')
 
+@push('head')
+{{-- Midtrans Snap.js (auto sandbox/production) --}}
+<script src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
+        data-client-key="{{ config('midtrans.client_key') }}"></script>
+@endpush
+
 @section('content')
 
 @php
 $statusMap = [
-    'pending'   => ['label' => 'Menunggu', 'color' => 'yellow', 'icon' => '⏳', 'step' => 0],
-    'paid'      => ['label' => 'Diproses', 'color' => 'blue',   'icon' => '💳', 'step' => 1],
-    'making'    => ['label' => 'Dibuat',   'color' => 'orange', 'icon' => '☕', 'step' => 2],
-    'ready'     => ['label' => 'Siap',     'color' => 'green',  'icon' => '✅', 'step' => 3],
-    'done'      => ['label' => 'Selesai',  'color' => 'gray',   'icon' => '🎉', 'step' => 4],
+    'pending'   => ['label' => 'Menunggu Pembayaran', 'color' => 'yellow', 'icon' => '⏳', 'step' => -1],
+    'paid'      => ['label' => 'Diproses', 'color' => 'blue',   'icon' => '💳', 'step' => 0],
+    'making'    => ['label' => 'Dibuat',   'color' => 'orange', 'icon' => '☕', 'step' => 1],
+    'ready'     => ['label' => 'Siap',     'color' => 'green',  'icon' => '✅', 'step' => 2],
+    'done'      => ['label' => 'Selesai',  'color' => 'gray',   'icon' => '🎉', 'step' => 3],
     'cancelled' => ['label' => 'Batal',    'color' => 'red',    'icon' => '❌', 'step' => -1],
 ];
 
@@ -22,14 +28,14 @@ $steps = [
     ['key' => 'done',   'label' => 'Selesai',             'desc' => 'Pesanan sudah diambil. Terima kasih!'],
 ];
 
-$currentStep = 0;
+$currentStep = -1;
 if ($order) {
     $currentStep = match($order->status) {
         'paid'    => 0,
         'making'  => 1,
         'ready'   => 2,
         'done'    => 3,
-        default   => 0,
+        default   => -1,
     };
 }
 @endphp
@@ -39,14 +45,16 @@ if ($order) {
 <div x-data="{
     orderStatus: '{{ $order->status }}',
     orderId: '{{ $order->order_id }}',
+    snapToken: '{{ $order->midtrans_token }}',
+    redirectUrl: '{{ $order->midtrans_redirect_url }}',
     currentStep: {{ $currentStep }},
     steps: {{ Illuminate\Support\Js::from($steps) }},
     polling: null,
-    statusLabels: { pending: 'Menunggu', paid: 'Diproses', making: 'Dibuat', ready: 'Siap', done: 'Selesai', cancelled: 'Batal' },
+    statusLabels: { pending: 'Menunggu Pembayaran', paid: 'Diproses', making: 'Dibuat', ready: 'Siap', done: 'Selesai', cancelled: 'Batal' },
     
     init() {
-        // Poll every 8 seconds for live status
-        this.polling = setInterval(() => this.checkStatus(), 8000);
+        // Poll every 5 seconds for live status
+        this.polling = setInterval(() => this.checkStatus(), 5000);
     },
     
     async checkStatus() {
@@ -63,16 +71,53 @@ if ($order) {
     
     updateStep() {
         const map = { paid: 0, making: 1, ready: 2, done: 3 };
-        this.currentStep = map[this.orderStatus] ?? 0;
-        // Stop polling when done
+        this.currentStep = map[this.orderStatus] ?? -1;
+        // Stop polling when done or cancelled
         if (this.orderStatus === 'done' || this.orderStatus === 'cancelled') {
             clearInterval(this.polling);
         }
     },
     
+    payNow() {
+        if (window.snap && this.snapToken) {
+            window.snap.pay(this.snapToken, {
+                onSuccess: async () => {
+                    await fetch('{{ route('order.update_status') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                        },
+                        body: JSON.stringify({ order_id: this.orderId, status: 'paid' }),
+                    });
+                    this.orderStatus = 'paid';
+                    this.updateStep();
+                },
+                onPending: () => {
+                    this.checkStatus();
+                },
+                onError: () => {
+                    alert('Pembayaran gagal, silakan coba lagi.');
+                }
+            });
+        } else if (this.redirectUrl) {
+            window.location.href = this.redirectUrl;
+        }
+    },
+    
     destroy() { clearInterval(this.polling); },
     
-    get currentLabel() { return this.steps[this.currentStep]?.label || this.statusLabels[this.orderStatus] || ''; },
+    get currentLabel() {
+        if (this.orderStatus === 'pending') return 'Menunggu Pembayaran';
+        if (this.orderStatus === 'cancelled') return 'Pesanan Dibatalkan';
+        return this.steps[this.currentStep]?.label || this.statusLabels[this.orderStatus] || '';
+    },
+
+    get currentDesc() {
+        if (this.orderStatus === 'pending') return 'Pesanan kamu belum dibayar. Silakan selesaikan pembayaran.';
+        if (this.orderStatus === 'cancelled') return 'Pembayaran tidak berhasil atau kedaluwarsa.';
+        return this.steps[this.currentStep]?.desc || 'Menunggu proses...';
+    }
 }" class="min-h-screen pb-32 md:pb-8">
 
     {{-- HEADER --}}
@@ -112,10 +157,10 @@ if ($order) {
                     <p class="text-[var(--c-lt)] text-xs uppercase tracking-widest font-medium mb-1"
                        x-text="statusLabels[orderStatus] || ''"></p>
                     <h2 class="text-2xl font-extrabold text-white mb-1">Halo, {{ $order->customer_name }}!</h2>
-                    <p class="text-[var(--c-lt)]/80 text-sm" x-text="steps[currentStep]?.desc || 'Menunggu proses...'"></p>
+                    <p class="text-[var(--c-lt)]/80 text-sm" x-text="currentDesc"></p>
                     <div class="mt-4 inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 rounded-full">
                         <span class="w-2 h-2 rounded-full animate-pulse"
-                              :class="orderStatus === 'done' ? 'bg-gray-300' : 'bg-green-400'"></span>
+                              :class="orderStatus === 'done' ? 'bg-gray-300' : (orderStatus === 'pending' ? 'bg-amber-400' : 'bg-green-400')"></span>
                         <span class="text-sm font-semibold text-[var(--c-lt)]" x-text="currentLabel"></span>
                         <span x-show="orderStatus !== 'done'" class="text-[10px] text-[var(--c-lt)]/50">● live</span>
                     </div>
@@ -130,6 +175,21 @@ if ($order) {
                 </div>
             </template>
         </div>
+
+        {{-- PENDING PAYMENT BANNER & BUTTON --}}
+        <template x-if="orderStatus === 'pending'">
+            <div class="bg-amber-50 rounded-2xl border border-amber-200 p-5 text-center shadow-sm">
+                <div class="flex items-center justify-center gap-2 text-amber-800 font-bold mb-1 text-sm">
+                    <i data-lucide="clock" class="w-4 h-4 text-amber-600"></i>
+                    <span>Pembayaran Belum Selesai</span>
+                </div>
+                <p class="text-xs text-amber-700/80 mb-4">Pesananmu sudah dibuat tetapi pembayaran belum dikonfirmasi.</p>
+                <button @click="payNow()" class="btn-primary w-full justify-center py-3 text-sm font-bold bg-amber-600 hover:bg-amber-700 border-none shadow-md shadow-amber-600/20">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    Bayar Sekarang
+                </button>
+            </div>
+        </template>
 
         {{-- PROGRESS STEPPER --}}
         <div x-show="orderStatus !== 'cancelled' && orderStatus !== 'pending'" 
@@ -262,7 +322,7 @@ if ($order) {
     
     statusBadge(status) {
         const map = {
-            pending:   { label: 'Menunggu',  class: 'bg-yellow-100 text-yellow-700', icon: '⏳' },
+            pending:   { label: 'Menunggu Pembayaran', class: 'bg-amber-100 text-amber-700', icon: '⏳' },
             paid:      { label: 'Diproses',  class: 'bg-blue-100 text-blue-700',     icon: '💳' },
             making:    { label: 'Dibuat',    class: 'bg-orange-100 text-orange-700', icon: '☕' },
             ready:     { label: 'Siap',      class: 'bg-green-100 text-green-700',   icon: '✅' },
@@ -273,7 +333,7 @@ if ($order) {
     },
     
     isActive(status) {
-        return ['paid', 'making', 'ready'].includes(status);
+        return ['pending', 'paid', 'making', 'ready'].includes(status);
     }
 }" class="min-h-screen pb-32 md:pb-8">
 

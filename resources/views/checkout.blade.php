@@ -89,6 +89,13 @@
                     window.location.href = '{{ route('order.status') }}?order_id=' + orderId;
                 },
                 onPending: (result) => {
+                    let history = JSON.parse(localStorage.getItem('skena_order_history') || '[]');
+                    if (!history.includes(orderId)) {
+                        history.unshift(orderId);
+                        if (history.length > 50) history = history.slice(0, 50);
+                        localStorage.setItem('skena_order_history', JSON.stringify(history));
+                    }
+                    $store.cart.clear();
                     window.location.href = '{{ route('order.status') }}?order_id=' + orderId + '&status=pending';
                 },
                 onError: (result) => {
