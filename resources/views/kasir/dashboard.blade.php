@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 @php
-    $serverIp = gethostbyname(gethostname());
-    $fp = @stream_socket_client("udp://8.8.8.8:53", $errno, $errstr, 1);
-    if ($fp) {
-        $socketName = stream_socket_get_name($fp, false);
-        if ($socketName) {
-            $serverIp = trim(explode(':', $socketName)[0]);
+    $host = request()->getHost();
+    if (in_array($host, ['localhost', '127.0.0.1'])) {
+        $serverIp = gethostbyname(gethostname());
+        $fp = @stream_socket_client("udp://8.8.8.8:53", $errno, $errstr, 1);
+        if ($fp) {
+            $socketName = stream_socket_get_name($fp, false);
+            if ($socketName) {
+                $serverIp = trim(explode(':', $socketName)[0]);
+            }
+            fclose($fp);
         }
-        fclose($fp);
+        $port = request()->getPort();
+        $portStr = ($port && $port != 80 && $port != 443) ? ':' . $port : '';
+        $dynamicBaseUrl = 'http://' . $serverIp . $portStr;
+    } else {
+        $dynamicBaseUrl = request()->getSchemeAndHttpHost();
     }
-    $port = request()->getPort();
-    $portStr = ($port && $port != 80 && $port != 443) ? ':' . $port : '';
-    $dynamicBaseUrl = 'http://' . $serverIp . $portStr;
 @endphp
 <html lang="id" x-data="{ sidebarOpen: false }" class="scroll-smooth">
 <head>
