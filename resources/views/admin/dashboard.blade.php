@@ -223,7 +223,7 @@
             alert('Gagal menghapus menu');
         }
     },
-    tables: [
+    tables: JSON.parse(localStorage.getItem('skena_admin_tables')) || [
         {id:1, number:1, name:'Meja 1', capacity:2, status:'available'},
         {id:2, number:2, name:'Meja 2', capacity:4, status:'occupied'},
         {id:3, number:3, name:'Meja 3', capacity:4, status:'available'},
@@ -233,7 +233,9 @@
         {id:7, number:7, name:'Meja 7', capacity:6, status:'occupied'},
         {id:8, number:8, name:'Meja 8', capacity:2, status:'available'},
     ],
-    nextTableId: 9,
+    saveTablesToStorage() {
+        localStorage.setItem('skena_admin_tables', JSON.stringify(this.tables));
+    },
     showAddModal: false,
     showQrModal: false,
     showDeleteConfirm: false,
@@ -249,14 +251,16 @@
             alert('Nomor meja sudah ada!');
             return;
         }
+        const maxId = this.tables.length > 0 ? Math.max(...this.tables.map(t => t.id)) : 0;
         this.tables.push({
-            id: this.nextTableId++,
+            id: maxId + 1,
             number: num,
             name: this.newTableName || 'Meja ' + num,
             capacity: parseInt(this.newTableCapacity) || 4,
             status: 'available'
         });
         this.tables.sort((a, b) => a.number - b.number);
+        this.saveTablesToStorage();
         this.newTableNumber = '';
         this.newTableName = '';
         this.newTableCapacity = '4';
@@ -268,6 +272,7 @@
     },
     deleteTable() {
         this.tables = this.tables.filter(t => t.id !== this.tableToDelete.id);
+        this.saveTablesToStorage();
         this.showDeleteConfirm = false;
         this.tableToDelete = null;
     },
