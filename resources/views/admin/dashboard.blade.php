@@ -223,18 +223,17 @@
             alert('Gagal menghapus menu');
         }
     },
-    tables: JSON.parse(localStorage.getItem('skena_admin_tables')) || [
-        {id:1, number:1, name:'Meja 1', capacity:2, status:'available'},
-        {id:2, number:2, name:'Meja 2', capacity:4, status:'occupied'},
-        {id:3, number:3, name:'Meja 3', capacity:4, status:'available'},
-        {id:4, number:4, name:'Meja 4', capacity:6, status:'occupied'},
-        {id:5, number:5, name:'Meja 5', capacity:2, status:'available'},
-        {id:6, number:6, name:'Meja 6', capacity:4, status:'available'},
-        {id:7, number:7, name:'Meja 7', capacity:6, status:'occupied'},
-        {id:8, number:8, name:'Meja 8', capacity:2, status:'available'},
-    ],
-    saveTablesToStorage() {
-        localStorage.setItem('skena_admin_tables', JSON.stringify(this.tables));
+    tables: {{ Illuminate\Support\Js::from($tables) }},
+    tablesLoading: false,
+    async fetchTables() {
+        try {
+            const res = await fetch('/admin/api/tables', {
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
+            });
+            if (res.ok) {
+                this.tables = await res.json();
+            }
+        } catch(e) { console.error('Gagal memuat meja:', e); }
     },
     showAddModal: false,
     showQrModal: false,
@@ -244,37 +243,62 @@
     newTableNumber: '',
     newTableCapacity: '4',
     newTableName: '',
-    addTable() {
+    async addTable() {
         if (!this.newTableNumber) return;
         const num = parseInt(this.newTableNumber);
-        if (this.tables.find(t => t.number === num)) {
-            alert('Nomor meja sudah ada!');
-            return;
+        try {
+            const res = await fetch('/admin/api/tables', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    number: num,
+                    name: this.newTableName || 'Meja ' + num,
+                    capacity: parseInt(this.newTableCapacity) || 4
+                })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                this.tables.push(data.table);
+                this.tables.sort((a, b) => a.number - b.number);
+                this.newTableNumber = '';
+                this.newTableName = '';
+                this.newTableCapacity = '4';
+                this.showAddModal = false;
+            } else {
+                alert('Error: ' + (data.message || 'Gagal menambah meja'));
+            }
+        } catch(e) {
+            console.error(e);
+            alert('Kesalahan jaringan');
         }
-        const maxId = this.tables.length > 0 ? Math.max(...this.tables.map(t => t.id)) : 0;
-        this.tables.push({
-            id: maxId + 1,
-            number: num,
-            name: this.newTableName || 'Meja ' + num,
-            capacity: parseInt(this.newTableCapacity) || 4,
-            status: 'available'
-        });
-        this.tables.sort((a, b) => a.number - b.number);
-        this.saveTablesToStorage();
-        this.newTableNumber = '';
-        this.newTableName = '';
-        this.newTableCapacity = '4';
-        this.showAddModal = false;
     },
     confirmDelete(table) {
         this.tableToDelete = table;
         this.showDeleteConfirm = true;
     },
-    deleteTable() {
-        this.tables = this.tables.filter(t => t.id !== this.tableToDelete.id);
-        this.saveTablesToStorage();
-        this.showDeleteConfirm = false;
-        this.tableToDelete = null;
+    async deleteTable() {
+        if (!this.tableToDelete) return;
+        try {
+            const res = await fetch('/admin/api/tables/' + this.tableToDelete.id, {
+                method: 'DELETE',
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
+            });
+            if (res.ok) {
+                this.tables = this.tables.filter(t => t.id !== this.tableToDelete.id);
+                this.showDeleteConfirm = false;
+                this.tableToDelete = null;
+            } else {
+                const data = await res.json();
+                alert('Error: ' + (data.message || 'Gagal menghapus meja'));
+            }
+        } catch(e) {
+            console.error(e);
+            alert('Kesalahan jaringan');
+        }
     },
     openQr(table) {
         this.selectedTable = table;

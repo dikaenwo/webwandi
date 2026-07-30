@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\TableController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Kasir\KasirController;
 
@@ -115,6 +116,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Settings API
         Route::put('/api/settings/password', [DashboardController::class, 'updatePassword'])->name('api.settings.password');
+
+        // Table Management API
+        Route::get('/api/tables', [TableController::class, 'index'])->name('api.tables.index');
+        Route::post('/api/tables', [TableController::class, 'store'])->name('api.tables.store');
+        Route::put('/api/tables/{table}', [TableController::class, 'update'])->name('api.tables.update');
+        Route::delete('/api/tables/{table}', [TableController::class, 'destroy'])->name('api.tables.destroy');
     });
 });
 

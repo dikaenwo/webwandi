@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
+use App\Models\Table;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -11,6 +12,7 @@ class DashboardController extends Controller
     public function index()
     {
         $menus = Menu::with('category')->orderBy('sort_order')->get();
+        $tables = Table::orderBy('number')->get();
         $categories = \App\Models\Category::orderBy('sort_order')->get();
         
         $today = \Carbon\Carbon::today();
@@ -143,7 +145,7 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact(
             'menus', 'categories', 'orders', 'stats', 'salesLabels', 'salesData',
             'salesLabelsMonth', 'salesDataMonth',
-            'visitLabels', 'visitData', 'topMenus', 'categoryChart'
+            'visitLabels', 'visitData', 'topMenus', 'categoryChart', 'tables'
         ));
 
     }
