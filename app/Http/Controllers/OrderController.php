@@ -69,7 +69,7 @@ class OrderController extends Controller
                 'phone'      => $request->customer_phone,
                 'email'      => $request->customer_email ?: 'customer@skenacoffee.id',
             ],
-            'enabled_payments' => ['qris', 'gopay', 'shopeepay'],
+            'enabled_payments' => ['gopay', 'bank_transfer', 'bni_va', 'bri_va', 'mandiri_va', 'permata_va', 'cimb_va'],
             'callbacks' => [
                 'finish' => url('/order/status'),
             ],
