@@ -90,35 +90,41 @@
                 localStorage.setItem('skena_order_history', JSON.stringify(history));
             }
 
-            // Always use Snap popup — shows all active payment channels
+            // Use Snap embed — keeps payment UI on page (no mobile redirect)
             this.showPayment = true;
             this.paymentMode = 'snap';
 
-            window.snap.pay(data.token, {
-                onSuccess: async (result) => {
-                    await fetch('{{ route('order.update_status') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
-                        },
-                        body: JSON.stringify({ order_id: this.currentOrderId, status: 'paid' }),
-                    });
-                    $store.cart.clear();
-                    window.location.href = '{{ route('order.status') }}?order_id=' + this.currentOrderId;
-                },
-                onPending: (result) => {
-                    $store.cart.clear();
-                    window.location.href = '{{ route('order.status') }}?order_id=' + this.currentOrderId + '&status=pending';
-                },
-                onError: (result) => {
-                    this.resetPayment();
-                    this.errorMsg = 'Pembayaran gagal. Silakan coba lagi.';
-                },
-                onClose: () => {
-                    this.resetPayment();
-                    this.errorMsg = 'Pembayaran dibatalkan.';
-                },
+            this.$nextTick(() => {
+                const container = document.getElementById('snap-container');
+                if (container) container.innerHTML = '';
+
+                window.snap.embed(data.token, {
+                    embedId: 'snap-container',
+                    onSuccess: async (result) => {
+                        await fetch('{{ route('order.update_status') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                            },
+                            body: JSON.stringify({ order_id: this.currentOrderId, status: 'paid' }),
+                        });
+                        $store.cart.clear();
+                        window.location.href = '{{ route('order.status') }}?order_id=' + this.currentOrderId;
+                    },
+                    onPending: (result) => {
+                        $store.cart.clear();
+                        window.location.href = '{{ route('order.status') }}?order_id=' + this.currentOrderId + '&status=pending';
+                    },
+                    onError: (result) => {
+                        this.resetPayment();
+                        this.errorMsg = 'Pembayaran gagal. Silakan coba lagi.';
+                    },
+                    onClose: () => {
+                        this.resetPayment();
+                        this.errorMsg = 'Pembayaran dibatalkan.';
+                    },
+                });
             });
 
         } catch (err) {
