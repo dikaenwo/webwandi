@@ -20,6 +20,155 @@ class OrderController extends Controller
     }
 
     /**
+     * Create an order and charge via Midtrans Core API with QRIS (other_qris).
+     * Returns a QR code image URL that works on mobile browsers.
+     */
+    public function createQris(Request $request)
+    {
+        $request->validate([
+            'customer_name'  => 'required|string|max:100',
+            'customer_phone' => 'nullable|string|max:20',
+            'customer_email' => 'nullable|email|max:100',
+            'table_number'   => 'required|string',
+            'items'          => 'required|array|min:1',
+            'items.*.name'   => 'required|string',
+            'items.*.price'  => 'required|integer|min:0',
+            'items.*.qty'    => 'required|integer|min:1',
+        ]);
+
+        $items    = $request->items;
+        $subtotal = collect($items)->sum(fn($i) => $i['price'] * $i['qty']);
+        $tax      = (int) round($subtotal * 0.1);
+        $total    = $subtotal + $tax;
+
+        $orderId = 'SKENA-' . strtoupper(date('Ymd')) . '-' . strtoupper(Str::random(6));
+
+        // Build Midtrans item details (including tax as a line item)
+        $itemDetails = collect($items)->map(fn($i) => [
+            'id'       => $i['id'] ?? Str::slug($i['name']),
+            'price'    => (int) $i['price'],
+            'quantity' => (int) $i['qty'],
+            'name'     => mb_substr($i['name'] . ($i['variant'] ? ' (' . $i['variant'] . ')' : ''), 0, 50),
+        ])->toArray();
+
+        $itemDetails[] = [
+            'id'       => 'TAX',
+            'price'    => $tax,
+            'quantity' => 1,
+            'name'     => 'Pajak (10%)',
+        ];
+
+        // Use Midtrans Core API to charge directly with QRIS
+        $serverKey = config('midtrans.server_key');
+        $apiUrl    = config('midtrans.is_production')
+            ? 'https://api.midtrans.com/v2/charge'
+            : 'https://api.sandbox.midtrans.com/v2/charge';
+
+        $chargeParams = [
+            'payment_type'        => 'qris',
+            'transaction_details' => [
+                'order_id'     => $orderId,
+                'gross_amount' => $total,
+            ],
+            'item_details'     => $itemDetails,
+            'customer_details' => [
+                'first_name' => $request->customer_name,
+                'phone'      => $request->customer_phone,
+                'email'      => $request->customer_email ?: 'customer@skenacoffee.id',
+            ],
+            'qris' => [
+                'acquirer' => 'gopay',
+            ],
+        ];
+
+        try {
+            $ch = curl_init();
+            curl_setopt_array($ch, [
+                CURLOPT_URL            => $apiUrl,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST           => true,
+                CURLOPT_HTTPHEADER     => [
+                    'Content-Type: application/json',
+                    'Accept: application/json',
+                    'Authorization: Basic ' . base64_encode($serverKey . ':'),
+                ],
+                CURLOPT_POSTFIELDS     => json_encode($chargeParams),
+            ]);
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            $result = json_decode($response, true);
+
+            if ($httpCode >= 400 || !isset($result['actions'])) {
+                $errorMsg = $result['status_message'] ?? 'Gagal membuat transaksi QRIS';
+                throw new \Exception($errorMsg);
+            }
+
+            // Extract QR code URL from actions array
+            $qrUrl = null;
+            foreach ($result['actions'] as $action) {
+                if ($action['name'] === 'generate-qr-code') {
+                    $qrUrl = $action['url'];
+                    break;
+                }
+            }
+
+            if (!$qrUrl) {
+                throw new \Exception('QR code URL tidak ditemukan dalam response');
+            }
+
+            // Also try to get Snap token as fallback
+            $snapToken = null;
+            try {
+                $snapParams = [
+                    'transaction_details' => [
+                        'order_id'     => $orderId . '-SNAP',
+                        'gross_amount' => $total,
+                    ],
+                    'enabled_payments' => ['other_qris'],
+                ];
+                $snapResponse = \Midtrans\Snap::createTransaction($snapParams);
+                $snapToken    = $snapResponse->token ?? null;
+            } catch (\Exception $e) {
+                // Snap fallback is optional — ignore errors
+            }
+
+            $order = Order::create([
+                'order_id'              => $orderId,
+                'customer_name'         => $request->customer_name,
+                'customer_phone'        => $request->customer_phone,
+                'customer_email'        => $request->customer_email,
+                'table_number'          => $request->table_number,
+                'items'                 => $items,
+                'subtotal'              => $subtotal,
+                'tax'                   => $tax,
+                'total'                 => $total,
+                'payment_method'        => 'qris',
+                'midtrans_order_id'     => $orderId,
+                'midtrans_token'        => $snapToken,
+                'midtrans_redirect_url' => $qrUrl,
+                'status'                => 'pending',
+            ]);
+
+            return response()->json([
+                'success'  => true,
+                'mode'     => 'qris',
+                'qr_url'   => $qrUrl,
+                'total'    => $total,
+                'order_id' => $orderId,
+                'token'    => $snapToken,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Create an order and get Midtrans Snap token.
      */
     public function createToken(Request $request)
@@ -69,7 +218,7 @@ class OrderController extends Controller
                 'phone'      => $request->customer_phone,
                 'email'      => $request->customer_email ?: 'customer@skenacoffee.id',
             ],
-            'enabled_payments' => ['gopay', 'bank_transfer', 'bni_va', 'bri_va', 'mandiri_va', 'permata_va', 'cimb_va'],
+            // No 'enabled_payments' filter — shows all channels active in your Midtrans dashboard
             'callbacks' => [
                 'finish' => url('/order/status'),
             ],

@@ -63,7 +63,10 @@ Route::get('/checkout', function () {
     return view('checkout');
 })->name('checkout');
 
-// Checkout - create Midtrans token (AJAX POST)
+// Checkout - create QRIS payment via Core API (AJAX POST)
+Route::post('/order/create-qris', [OrderController::class, 'createQris'])->name('order.create_qris');
+
+// Checkout - create Midtrans Snap token (AJAX POST, fallback)
 Route::post('/order/create-token', [OrderController::class, 'createToken'])->name('order.create_token');
 
 // Midtrans payment notification webhook (POST, no CSRF)
