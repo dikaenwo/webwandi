@@ -42,32 +42,33 @@ Route::get('/', function () {
         }
     }
 
-    // Ambil top 4 menu berdasarkan total qty terjual
+    // Urutkan dari terbanyak, ambil SEMUA sold IDs dulu (belum dibatasi 4)
     arsort($salesCount);
-    $topIds = array_slice(array_keys($salesCount), 0, 4);
+    $allSoldIds = array_keys($salesCount);
 
-    // Ambil menu yang sudah terjual (urut dari terbanyak)
+    // Filter available dulu, baru ambil top 4
+    // (mencegah item unavailable buang slot dan diganti filler dengan total_sold=0)
     $bestSellers = collect();
-
-    if (!empty($topIds)) {
-        $bestSellersRaw = \App\Models\Menu::available()
-            ->whereIn('id', $topIds)
+    if (!empty($allSoldIds)) {
+        $soldMenusRaw = \App\Models\Menu::available()
+            ->whereIn('id', $allSoldIds)
             ->get()
             ->keyBy('id');
 
-        $bestSellers = collect($topIds)
-            ->map(fn($id) => $bestSellersRaw->get($id))
-            ->filter()
+        $bestSellers = collect($allSoldIds)
+            ->map(fn($id) => $soldMenusRaw->get($id))
+            ->filter()                        // buang yang tidak available
             ->map(function ($menu) use ($salesCount) {
                 $menu->total_sold = $salesCount[$menu->id] ?? 0;
                 return $menu;
             })
+            ->take(4)                        // baru ambil top 4
             ->values();
     }
 
-    // Jika kurang dari 4 item terjual, isi sisa slot dengan menu rating tertinggi
+    // Isi sisa jika kurang dari 4 item yang available + terjual
     $alreadyIds = $bestSellers->pluck('id')->toArray();
-    $needed = max(0, 4 - $bestSellers->count());
+    $needed     = max(0, 4 - $bestSellers->count());
 
     if ($needed > 0) {
         $fillers = \App\Models\Menu::available()
@@ -107,18 +108,19 @@ Route::get('/api/best-sellers', function () {
     }
 
     arsort($salesCount);
-    $topIds = array_slice(array_keys($salesCount), 0, 4);
+    $allSoldIds = array_keys($salesCount);
 
     $bestSellers = collect();
-    if (!empty($topIds)) {
-        $raw = \App\Models\Menu::available()->whereIn('id', $topIds)->get()->keyBy('id');
-        $bestSellers = collect($topIds)
+    if (!empty($allSoldIds)) {
+        $raw = \App\Models\Menu::available()->whereIn('id', $allSoldIds)->get()->keyBy('id');
+        $bestSellers = collect($allSoldIds)
             ->map(fn($id) => $raw->get($id))
             ->filter()
             ->map(function ($menu) use ($salesCount) {
                 $menu->total_sold = $salesCount[$menu->id] ?? 0;
                 return $menu;
             })
+            ->take(4)
             ->values();
     }
 
