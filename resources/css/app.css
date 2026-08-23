@@ -43,8 +43,9 @@
 
 @theme {
     /* Tailwind will read these as arbitrary values later since we use bg-[var(--c-dk)] */
-    --font-sans: 'Inter', sans-serif;
-    --font-heading: 'Heading Now', 'Inter', sans-serif;
+    --font-sans: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    --font-heading: 'Heading Now', 'Plus Jakarta Sans', sans-serif;
+    --font-display: 'Playfair Display', Georgia, serif;
     --radius-2xl: 1rem;
     --radius-3xl: 1.5rem;
 }
@@ -68,7 +69,7 @@
     }
 
     body {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
         background-color: var(--c-bg);
         color: var(--c-dk);
     }
