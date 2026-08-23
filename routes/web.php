@@ -24,13 +24,19 @@ Route::get('/', function () {
     $validOrders = \App\Models\Order::whereNotIn('status', ['pending', 'cancelled'])->get();
 
     // Agregasi qty per menu_id
+    // Catatan: item ID bisa berformat "19-ice" atau "3-hot" (dengan variant suffix)
+    // Ekstrak angka saja: "19-ice" → 19
     $salesCount = [];
     foreach ($validOrders as $order) {
         if (is_array($order->items)) {
             foreach ($order->items as $item) {
-                $menuId = $item['id'] ?? null;
-                if ($menuId) {
-                    $salesCount[$menuId] = ($salesCount[$menuId] ?? 0) + ($item['qty'] ?? 1);
+                $rawId = $item['id'] ?? null;
+                if ($rawId !== null) {
+                    // Ambil bagian sebelum "-" (atau langsung angka jika tidak ada "-")
+                    $menuId = (int) explode('-', (string) $rawId)[0];
+                    if ($menuId > 0) {
+                        $salesCount[$menuId] = ($salesCount[$menuId] ?? 0) + ($item['qty'] ?? 1);
+                    }
                 }
             }
         }

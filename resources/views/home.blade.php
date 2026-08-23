@@ -112,12 +112,14 @@
                         </div>
                     </div>
                 @endif
-                {{-- Best Seller Badge --}}
+                {{-- Best Seller Badge: hanya tampil jika benar-benar pernah terjual --}}
+                @if(($item->total_sold ?? 0) > 0)
                 <div class="absolute top-4 left-4">
                     <span class="bg-[#DDD3C9] text-[var(--c-dk)] text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1">
                         <i data-lucide="flame" class="w-3 h-3"></i> TERLARIS
                     </span>
                 </div>
+                @endif
             </div>
             {{-- Content --}}
             <div class="p-5">

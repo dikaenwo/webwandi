@@ -21,16 +21,21 @@ class DashboardController extends Controller
             ->get();
 
         // Agregasi sales per menu_id (untuk kolom Terjual) & per nama (untuk Top Menu chart)
+        // Catatan: item ID bisa berformat "19-ice" atau "3-hot" — ekstrak angka saja
         $salesCount  = [];
         $menuSales   = [];
         $totalItems  = 0;
         foreach ($validOrders as $ord) {
             if (is_array($ord->items)) {
                 foreach ($ord->items as $item) {
-                    $qty = $item['qty'] ?? 1;
-                    // by ID → kolom Terjual di tabel menu
-                    if (!empty($item['id'])) {
-                        $salesCount[$item['id']] = ($salesCount[$item['id']] ?? 0) + $qty;
+                    $qty   = $item['qty'] ?? 1;
+                    $rawId = $item['id'] ?? null;
+                    // Ekstrak numeric menu_id: "19-ice" → 19
+                    if ($rawId !== null) {
+                        $menuId = (int) explode('-', (string) $rawId)[0];
+                        if ($menuId > 0) {
+                            $salesCount[$menuId] = ($salesCount[$menuId] ?? 0) + $qty;
+                        }
                     }
                     // by name → Top Menu chart
                     $menuSales[$item['name']] = ($menuSales[$item['name']] ?? 0) + $qty;
