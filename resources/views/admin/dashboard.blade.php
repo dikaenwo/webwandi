@@ -665,7 +665,7 @@
                     <div class="flex items-center justify-between mb-5">
                         <div>
                             <h3 class="font-bold text-[var(--c-dk)] text-sm">Tren Kunjungan (Jam)</h3>
-                            <p class="text-xs text-[var(--c-md)]/60 mt-0.5">Hari ini</p>
+                            <p class="text-xs text-[var(--c-md)]/60 mt-0.5">7 hari terakhir</p>
                         </div>
                     </div>
                     <div class="w-full h-48 mt-4 relative">

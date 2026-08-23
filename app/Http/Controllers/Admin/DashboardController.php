@@ -95,10 +95,11 @@ class DashboardController extends Controller
             $salesDataMonth[]   = $validOrders->filter(fn($o) => $o->created_at->isSameDay($date))->sum('total') / 1000000;
         }
 
-        // 3. CHART: Kunjungan per Jam
+        // 3. CHART: Kunjungan per Jam (7 hari terakhir agar selalu ada data)
         $visitData   = array_fill(0, 8, 0);
         $visitLabels = ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'];
-        foreach ($todayOrders as $order) {
+        $last7Orders = $validOrders->filter(fn($o) => $o->created_at->gte(\Carbon\Carbon::today()->subDays(6)->startOfDay()));
+        foreach ($last7Orders as $order) {
             $h = $order->created_at->hour;
             if ($h >= 8 && $h < 10)       $visitData[0]++;
             elseif ($h >= 10 && $h < 12)  $visitData[1]++;
