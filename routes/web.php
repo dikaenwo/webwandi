@@ -40,8 +40,10 @@ Route::get('/', function () {
     arsort($salesCount);
     $topIds = array_slice(array_keys($salesCount), 0, 4);
 
+    // Ambil menu yang sudah terjual (urut dari terbanyak)
+    $bestSellers = collect();
+
     if (!empty($topIds)) {
-        // Ambil menu sesuai urutan penjualan terbanyak
         $bestSellersRaw = \App\Models\Menu::available()
             ->whereIn('id', $topIds)
             ->get()
@@ -55,20 +57,29 @@ Route::get('/', function () {
                 return $menu;
             })
             ->values();
-    } else {
-        // Fallback: jika belum ada order, tampilkan 4 menu dengan rating tertinggi
-        $bestSellers = \App\Models\Menu::available()
+    }
+
+    // Jika kurang dari 4, isi sisa slot dengan menu rating tertinggi (yang belum masuk)
+    $alreadyIds = $bestSellers->pluck('id')->toArray();
+    $needed = 4 - $bestSellers->count();
+
+    if ($needed > 0) {
+        $fillers = \App\Models\Menu::available()
+            ->when(!empty($alreadyIds), fn($q) => $q->whereNotIn('id', $alreadyIds))
             ->orderByDesc('rating')
-            ->limit(4)
+            ->limit($needed)
             ->get()
             ->map(function ($menu) {
                 $menu->total_sold = 0;
                 return $menu;
             });
+
+        $bestSellers = $bestSellers->concat($fillers)->values();
     }
 
     return view('home', compact('bestSellers'));
 })->name('home');
+
 
 // QR Scan Route
 Route::get('/scan/{table}', function ($table) {
