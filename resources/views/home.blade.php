@@ -111,8 +111,8 @@
         </a>
     </div>
 
-    {{-- Cards Grid --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 relative"
+    {{-- Cards Grid: responsif 2→3→4→5 kolom tergantung jumlah item --}}
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 relative"
          x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'reveal active' : 'reveal'">
 
         {{-- Skeleton saat loading pertama --}}

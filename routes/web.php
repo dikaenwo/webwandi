@@ -42,9 +42,9 @@ Route::get('/', function () {
         }
     }
 
-    // Ambil top 4 menu berdasarkan total qty terjual
+    // Ambil SEMUA menu yang pernah terjual (urut dari terbanyak) — tidak dibatasi 4
     arsort($salesCount);
-    $topIds = array_slice(array_keys($salesCount), 0, 4);
+    $topIds = array_keys($salesCount); // semua ID yang ada transaksi
 
     // Ambil menu yang sudah terjual (urut dari terbanyak)
     $bestSellers = collect();
@@ -65,9 +65,9 @@ Route::get('/', function () {
             ->values();
     }
 
-    // Jika kurang dari 4, isi sisa slot dengan menu rating tertinggi (yang belum masuk)
+    // Jika kurang dari 4 item terjual, isi sisa slot dengan menu rating tertinggi
     $alreadyIds = $bestSellers->pluck('id')->toArray();
-    $needed = 4 - $bestSellers->count();
+    $needed = max(0, 4 - $bestSellers->count());
 
     if ($needed > 0) {
         $fillers = \App\Models\Menu::available()
@@ -107,7 +107,7 @@ Route::get('/api/best-sellers', function () {
     }
 
     arsort($salesCount);
-    $topIds = array_slice(array_keys($salesCount), 0, 4);
+    $topIds = array_keys($salesCount); // semua item yang pernah terjual
 
     $bestSellers = collect();
     if (!empty($topIds)) {
@@ -122,7 +122,7 @@ Route::get('/api/best-sellers', function () {
             ->values();
     }
 
-    $needed     = 4 - $bestSellers->count();
+    $needed     = max(0, 4 - $bestSellers->count());
     $alreadyIds = $bestSellers->pluck('id')->toArray();
     if ($needed > 0) {
         $fillers = \App\Models\Menu::available()
