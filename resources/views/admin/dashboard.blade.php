@@ -356,8 +356,43 @@
             'cancelled': 'Dibatalkan',
         };
         return map[status] || status;
+    },
+
+    // ── Realtime Polling ────────────────────────────────────────────────
+    liveConnected: true,
+    lastUpdated: '',
+    newOrderAlert: false,
+    _pollingTimer: null,
+
+    startPolling() {
+        this._pollingTimer = setInterval(async () => {
+            try {
+                const res = await fetch('/admin/api/live', { headers: { 'Accept': 'application/json' } });
+                if (!res.ok) { this.liveConnected = false; return; }
+                const data = await res.json();
+                this.liveConnected = true;
+                this.lastUpdated = data.server_time;
+
+                // Deteksi order baru
+                const oldCount = this.orders.length;
+                const newCount = data.orders.length;
+                const newLatestId = data.orders[0]?.id;
+                const oldLatestId = this.orders[0]?.id;
+                if (newLatestId && newLatestId !== oldLatestId) {
+                    this.newOrderAlert = true;
+                    setTimeout(() => { this.newOrderAlert = false; }, 4000);
+                }
+
+                // Update state
+                this.stats  = data.stats;
+                this.orders = data.orders;
+            } catch (e) {
+                this.liveConnected = false;
+                console.warn('Polling error:', e);
+            }
+        }, 20000); // setiap 20 detik
     }
-}">
+}" x-init="startPolling(); lastUpdated = new Date().toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit',second:'2-digit'})">
 
 {{-- ===================== MOBILE OVERLAY ===================== --}}
 <div x-show="sidebarOpen"
@@ -549,10 +584,20 @@
                         </div>
                     </template>
                 </div>
-                {{-- Refresh --}}
-                <button class="w-9 h-9 rounded-xl border border-[var(--c-lt)] flex items-center justify-center hover:bg-[var(--c-bg)] transition-colors">
-                    <i data-lucide="refresh-cw" class="w-4 h-4 text-[var(--c-dk)]"></i>
-                </button>
+                {{-- LIVE Indicator + Refresh --}}
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-[10px] font-bold uppercase tracking-wide"
+                         :class="liveConnected ? 'border-green-200 bg-green-50 text-green-700' : 'border-red-200 bg-red-50 text-red-600'">
+                        <span class="w-1.5 h-1.5 rounded-full animate-pulse"
+                              :class="liveConnected ? 'bg-green-500' : 'bg-red-500'"></span>
+                        <span x-text="liveConnected ? 'LIVE' : 'OFFLINE'"></span>
+                    </div>
+                    <button @click="window.location.reload()"
+                            class="w-9 h-9 rounded-xl border border-[var(--c-lt)] flex items-center justify-center hover:bg-[var(--c-bg)] transition-colors"
+                            title="Refresh halaman">
+                        <i data-lucide="refresh-cw" class="w-4 h-4 text-[var(--c-dk)]"></i>
+                    </button>
+                </div>
                 {{-- View Site --}}
                 <a href="{{ route('home') }}" target="_blank" class="hidden sm:flex btn-outline text-xs py-2">
                     <i data-lucide="external-link" class="w-3 h-3"></i>
@@ -565,6 +610,20 @@
 
     {{-- PAGE CONTENT --}}
     <main class="flex-1 p-4 sm:p-6 overflow-auto">
+
+        {{-- ── New Order Alert Banner ── --}}
+        <div x-show="newOrderAlert" x-cloak
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 -translate-y-3"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-3"
+             class="mb-4 flex items-center gap-3 bg-[var(--c-dk)] text-white text-sm font-semibold px-4 py-3 rounded-2xl shadow-lg">
+            <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span>
+            <span>🔔 Order baru masuk!</span>
+            <button @click="newOrderAlert = false" class="ml-auto text-white/60 hover:text-white transition-colors">✕</button>
+        </div>
 
         {{-- ======= DASHBOARD PAGE ======= --}}
         <div x-show="activePage === 'dashboard'" class="space-y-6">

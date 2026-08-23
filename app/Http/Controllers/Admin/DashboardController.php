@@ -171,4 +171,39 @@ class DashboardController extends Controller
             'message' => 'Kata sandi berhasil diubah.'
         ]);
     }
+
+    /**
+     * Realtime polling endpoint — dipanggil setiap ~20 detik oleh frontend.
+     * Ringan: hanya hitung stats hari ini + 10 order terbaru.
+     */
+    public function live()
+    {
+        $today       = \Carbon\Carbon::today();
+        $validOrders = \App\Models\Order::whereNotIn('status', ['pending', 'cancelled'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $todayOrders = $validOrders->filter(fn($o) => $o->created_at->isSameDay($today));
+
+        $stats = [
+            'total_order' => $todayOrders->count(),
+            'pendapatan'  => $todayOrders->sum('total'),
+            'aktif'       => $validOrders->filter(fn($o) => in_array($o->status, ['paid', 'making', 'ready']))->count(),
+        ];
+
+        $orders = $validOrders->take(10)->map(fn($order) => [
+            'id'          => $order->order_id,
+            'table'       => $order->table_number,
+            'items_count' => is_array($order->items) ? count($order->items) : 0,
+            'total'       => $order->total,
+            'status'      => $order->status,
+            'time'        => $order->created_at->diffForHumans(),
+        ]);
+
+        return response()->json([
+            'stats'       => $stats,
+            'orders'      => $orders,
+            'server_time' => now()->format('H:i:s'),
+        ]);
+    }
 }

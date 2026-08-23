@@ -172,6 +172,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Order Management API for frontend (kept for backward compatibility)
         Route::put('/api/orders/{id}/status', [DashboardController::class, 'updateOrderStatus'])->name('api.orders.status');
 
+        // ── Live polling API (realtime dashboard refresh) ──
+        Route::get('/api/live', [DashboardController::class, 'live'])->name('api.live');
+
         // Analytics API
         Route::get('/api/analytics/data', [AnalyticsController::class, 'data'])->name('api.analytics.data');
         Route::get('/api/analytics/export-csv', [AnalyticsController::class, 'exportCsv'])->name('api.analytics.csv');
