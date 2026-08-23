@@ -259,7 +259,7 @@ function bestSellerApp() {
         <div class="relative w-full lg:w-1/2 h-72 sm:h-96 lg:h-auto overflow-hidden"
              x-data="{ shown: false }" x-intersect.once="shown = true"
              :class="shown ? 'reveal active' : 'reveal'">
-            <img src="{{ asset('images/SKN-5.jpg') }}"
+            <img src="{{ asset('images/SKN-5-web.jpg') }}"
                  alt="Interior Skena Coffee"
                  class="absolute inset-0 w-full h-full object-cover">
             {{-- Subtle right-edge fade ke white (transisi ke teks) --}}
