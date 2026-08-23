@@ -84,7 +84,52 @@ Route::get('/', function () {
         $bestSellers = $bestSellers->concat($fillers)->values();
     }
 
-    return view('home', compact('bestSellers'));
+    // ── Kategori dari DB (dengan jumlah menu aktual) ──
+    $dbCategories = \App\Models\Category::withCount(['menus' => function ($q) {
+        $q->where('is_available', true);
+    }])->orderBy('sort_order')->get();
+
+    // Peta ikon dan warna berdasarkan kata kunci nama kategori
+    $iconMap = [
+        'espresso'  => ['icon' => 'coffee',               'bg' => 'bg-[var(--c-md)]'],
+        'black'     => ['icon' => 'zap',                  'bg' => 'bg-[#1a1a2e]'],
+        'signature' => ['icon' => 'star',                 'bg' => 'bg-[var(--c-md-lt)]'],
+        'blend'     => ['icon' => 'blend',                'bg' => 'bg-[#2d6a5e]'],
+        'tea'       => ['icon' => 'leaf',                 'bg' => 'bg-[#276749]'],
+        'coffee'    => ['icon' => 'coffee',               'bg' => 'bg-[var(--c-md)]'],
+        'hot'       => ['icon' => 'flame',                'bg' => 'bg-orange-500'],
+        'cold'      => ['icon' => 'thermometer-snowflake','bg' => 'bg-[#2B6CB0]'],
+        'matcha'    => ['icon' => 'leaf',                 'bg' => 'bg-green-600'],
+        'food'      => ['icon' => 'utensils',             'bg' => 'bg-[var(--c-dk)]'],
+        'pizza'     => ['icon' => 'utensils',             'bg' => 'bg-red-600'],
+        'snack'     => ['icon' => 'cookie',               'bg' => 'bg-amber-500'],
+        'appetizer' => ['icon' => 'cookie',               'bg' => 'bg-[var(--c-md-lt)]'],
+        'milk'      => ['icon' => 'glass-water',          'bg' => 'bg-sky-400'],
+        'juice'     => ['icon' => 'citrus',               'bg' => 'bg-orange-400'],
+        'dessert'   => ['icon' => 'cake-slice',           'bg' => 'bg-pink-400'],
+    ];
+    $bgPalette = [
+        'bg-[var(--c-md)]','bg-[#1a1a2e]','bg-[var(--c-md-lt)]',
+        'bg-[#2d6a5e]','bg-[#276749]','bg-[#2B6CB0]','bg-amber-600',
+        'bg-rose-700','bg-teal-600','bg-violet-700',
+    ];
+
+    $categories = $dbCategories->map(function ($cat, $idx) use ($iconMap, $bgPalette) {
+        $nameLower = strtolower($cat->name);
+        $found     = ['icon' => 'tag', 'bg' => $bgPalette[$idx % count($bgPalette)]];
+        foreach ($iconMap as $keyword => $style) {
+            if (str_contains($nameLower, $keyword)) { $found = $style; break; }
+        }
+        return [
+            'id'    => $cat->id,
+            'name'  => $cat->name,
+            'icon'  => $found['icon'],
+            'bg'    => $found['bg'],
+            'count' => $cat->menus_count,
+        ];
+    });
+
+    return view('home', compact('bestSellers', 'categories'));
 })->name('home');
 
 

@@ -265,27 +265,18 @@ function bestSellerApp() {
             <p class="text-[var(--c-lt)]/60 text-sm mt-2">Temukan minuman & makanan yang kamu sukai</p>
         </div>
 
-        @php
-        $categories = [
-            ['icon'=>'coffee','name'=>'Hot Coffee','desc'=>'Espresso, Americano, Cappuccino','count'=>8,'bg'=>'bg-[var(--c-md)]'],
-            ['icon'=>'thermometer-snowflake','name'=>'Cold Coffee','desc'=>'Cold brew, Iced Latte, Frappe','count'=>10,'bg'=>'bg-[#2B6CB0]'],
-            ['icon'=>'leaf','name'=>'Non Coffee','desc'=>'Matcha, Tea, Chocolate, Milk','count'=>7,'bg'=>'bg-[#276749]'],
-            ['icon'=>'utensils','name'=>'Food','desc'=>'Toast, Sandwich, Waffle','count'=>6,'bg'=>'bg-[var(--c-dk)]'],
-            ['icon'=>'cookie','name'=>'Appetizer','desc'=>'Cookies, Croissant, Muffin','count'=>5,'bg'=>'bg-[var(--c-md-lt)]'],
-        ];
-        @endphp
-
+        {{-- Kategori dari database (dinamis) --}}
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4"
              x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'reveal active' : 'reveal'">
             @foreach($categories as $cat)
-            <a href="{{ route('menu') }}" id="cat-{{ \Illuminate\Support\Str::slug($cat['name']) }}"
+            <a href="{{ route('menu', ['category' => $cat['id']]) }}"
+               id="cat-{{ \Illuminate\Support\Str::slug($cat['name']) }}"
                class="group flex flex-col items-center p-6 bg-white/5 rounded-3xl hover:bg-white/10 active:scale-95 transition-all duration-300 text-center cursor-pointer border border-white/8 hover:border-white/20 backdrop-blur-sm">
                 <div class="w-16 h-16 rounded-2xl {{ $cat['bg'] }} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md">
                     <i data-lucide="{{ $cat['icon'] }}" class="w-7 h-7 text-white"></i>
                 </div>
                 <h3 class="font-bold text-white text-sm mb-1">{{ $cat['name'] }}</h3>
-                <p class="text-[var(--c-lt)]/50 text-[11px] leading-relaxed mb-3">{{ $cat['desc'] }}</p>
-                <span class="text-[10px] bg-white/10 text-[var(--c-lt)] px-3 py-1 rounded-full font-semibold border border-white/10">{{ $cat['count'] }} menu</span>
+                <span class="text-[10px] bg-white/10 text-[var(--c-lt)] px-3 py-1 rounded-full font-semibold border border-white/10 mt-auto">{{ $cat['count'] }} menu</span>
             </a>
             @endforeach
         </div>
