@@ -88,7 +88,7 @@
                 <span class="text-xs font-bold text-[var(--c-md)] uppercase tracking-[0.2em]">Favorit Pelanggan</span>
             </div>
             <h2 class="text-3xl md:text-4xl font-extrabold text-[var(--c-dk)] tracking-tight">Best Seller</h2>
-            <p class="text-[var(--c-md)]/60 text-sm mt-2">Menu yang paling banyak dipesan minggu ini</p>
+            <p class="text-[var(--c-md)]/60 text-sm mt-2">Menu yang paling banyak dipesan berdasarkan data transaksi</p>
         </div>
         <a href="{{ route('menu') }}" class="btn-outline shrink-0 self-start sm:self-auto">
             Lihat Semua <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -112,9 +112,11 @@
                         </div>
                     </div>
                 @endif
-                {{-- Tag Badge --}}
+                {{-- Best Seller Badge --}}
                 <div class="absolute top-4 left-4">
-                    <span class="bg-[#DDD3C9] text-[var(--c-dk)] text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest">{{ $item->tag ?? 'TERLARIS' }}</span>
+                    <span class="bg-[#DDD3C9] text-[var(--c-dk)] text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1">
+                        <i data-lucide="flame" class="w-3 h-3"></i> TERLARIS
+                    </span>
                 </div>
             </div>
             {{-- Content --}}
@@ -128,6 +130,12 @@
                         <span class="text-xs font-bold text-[var(--c-dk)]">{{ number_format($item->rating ?? 0, 1) }}</span>
                     </div>
                 </div>
+                @if(($item->total_sold ?? 0) > 0)
+                <div class="mt-2 flex items-center gap-1 text-[var(--c-md)]/60">
+                    <i data-lucide="shopping-bag" class="w-3 h-3"></i>
+                    <span class="text-[11px] font-medium">{{ $item->total_sold }} terjual</span>
+                </div>
+                @endif
             </div>
         </div>
         @endforeach

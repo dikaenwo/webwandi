@@ -20,10 +20,53 @@ use App\Http\Controllers\Kasir\KasirController;
 
 // Home / Landing Page
 Route::get('/', function () {
-    $bestSellers = \App\Models\Menu::available()
-        ->orderByDesc('rating')
-        ->limit(4)
-        ->get();
+    // Hitung menu paling banyak terjual dari data order
+    $validOrders = \App\Models\Order::whereNotIn('status', ['pending', 'cancelled'])->get();
+
+    // Agregasi qty per menu_id
+    $salesCount = [];
+    foreach ($validOrders as $order) {
+        if (is_array($order->items)) {
+            foreach ($order->items as $item) {
+                $menuId = $item['id'] ?? null;
+                if ($menuId) {
+                    $salesCount[$menuId] = ($salesCount[$menuId] ?? 0) + ($item['qty'] ?? 1);
+                }
+            }
+        }
+    }
+
+    // Ambil top 4 menu berdasarkan total qty terjual
+    arsort($salesCount);
+    $topIds = array_slice(array_keys($salesCount), 0, 4);
+
+    if (!empty($topIds)) {
+        // Ambil menu sesuai urutan penjualan terbanyak
+        $bestSellersRaw = \App\Models\Menu::available()
+            ->whereIn('id', $topIds)
+            ->get()
+            ->keyBy('id');
+
+        $bestSellers = collect($topIds)
+            ->map(fn($id) => $bestSellersRaw->get($id))
+            ->filter()
+            ->map(function ($menu) use ($salesCount) {
+                $menu->total_sold = $salesCount[$menu->id] ?? 0;
+                return $menu;
+            })
+            ->values();
+    } else {
+        // Fallback: jika belum ada order, tampilkan 4 menu dengan rating tertinggi
+        $bestSellers = \App\Models\Menu::available()
+            ->orderByDesc('rating')
+            ->limit(4)
+            ->get()
+            ->map(function ($menu) {
+                $menu->total_sold = 0;
+                return $menu;
+            });
+    }
+
     return view('home', compact('bestSellers'));
 })->name('home');
 
