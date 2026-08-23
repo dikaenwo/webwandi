@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OwnerAuth
 {
+    /**
+     * Hanya role 'owner' yang boleh akses /owner/* routes.
+     * Middleware ini sudah hanya di-apply ke owner route group.
+     */
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::guard('admin')->user();
@@ -17,8 +21,6 @@ class OwnerAuth
             return redirect()->route('admin.login');
         }
 
-        // Non-owner yang mencoba akses /owner/* → redirect ke login
-        // (bukan ke admin dashboard, agar tidak cross-contaminate antar tab)
         if (!$user->isOwner()) {
             return redirect()->route('admin.login')
                 ->with('error', 'Akses ditolak. Halaman ini hanya untuk Owner.');

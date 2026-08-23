@@ -10,9 +10,13 @@ use Symfony\Component\HttpFoundation\Response;
 class AdminAuth
 {
     /**
-     * Handle an incoming request.
+     * Hanya role 'admin' yang boleh akses protected /admin/* routes.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Bug sebelumnya: cek $request->is('admin/*') tidak match /admin (root),
+     * sehingga kasir/owner bisa akses /admin langsung.
+     *
+     * Fix: tidak perlu cek path — middleware ini sudah hanya di-apply ke
+     * protected admin route group, sehingga cukup cek role saja.
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -22,12 +26,9 @@ class AdminAuth
 
         $user = Auth::guard('admin')->user();
 
-        // Kasir/Owner yang mencoba akses admin panel → redirect ke login
-        // BUKAN redirect ke dashboard mereka — ini mencegah tab admin tiba-tiba
-        // menampilkan halaman kasir/owner ketika sesi berubah di tab lain.
-        if (!$user->isAdmin() && $request->is('admin/*') && !$request->is('admin/logout')) {
+        if (!$user->isAdmin()) {
             return redirect()->route('admin.login')
-                ->with('error', 'Akses ditolak. Silakan login sebagai Admin.');
+                ->with('error', 'Akses ditolak. Halaman ini hanya untuk Admin.');
         }
 
         return $next($request);

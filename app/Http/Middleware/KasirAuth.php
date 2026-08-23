@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class KasirAuth
 {
+    /**
+     * Hanya role 'kasir' yang boleh akses /kasir/* routes.
+     * Middleware ini sudah hanya di-apply ke kasir route group.
+     */
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::guard('admin')->user();
@@ -18,11 +22,8 @@ class KasirAuth
         }
 
         if (!$user->isKasir()) {
-            // Non-kasir users trying to access /kasir → redirect to their own dashboard
-            if ($user->isOwner()) {
-                return redirect()->route('owner.dashboard');
-            }
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.login')
+                ->with('error', 'Akses ditolak. Halaman ini hanya untuk Kasir.');
         }
 
         return $next($request);
