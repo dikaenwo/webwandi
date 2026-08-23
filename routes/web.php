@@ -192,7 +192,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 // =================== OWNER ROUTES ===================
-Route::prefix('owner')->name('owner.')->middleware(['admin.auth', 'owner.auth'])->group(function () {
+// 'owner.auth' sudah handle: cek auth + cek role owner
+Route::prefix('owner')->name('owner.')->middleware(['owner.auth'])->group(function () {
     Route::get('/', [\App\Http\Controllers\Owner\OwnerController::class, 'index'])->name('dashboard');
     Route::get('/api/analytics/data', [\App\Http\Controllers\Owner\OwnerController::class, 'analyticsData'])->name('api.analytics.data');
     Route::get('/api/analytics/export-csv', [\App\Http\Controllers\Owner\OwnerController::class, 'exportCsv'])->name('api.analytics.csv');
@@ -200,7 +201,8 @@ Route::prefix('owner')->name('owner.')->middleware(['admin.auth', 'owner.auth'])
 });
 
 // =================== KASIR ROUTES ===================
-Route::prefix('kasir')->name('kasir.')->middleware(['admin.auth', 'kasir.auth'])->group(function () {
+// 'kasir.auth' sudah handle: cek auth + cek role kasir
+Route::prefix('kasir')->name('kasir.')->middleware(['kasir.auth'])->group(function () {
     Route::get('/', [KasirController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [KasirController::class, 'index'])->name('dashboard.index');
 
