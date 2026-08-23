@@ -95,22 +95,19 @@ class DashboardController extends Controller
             $salesDataMonth[]   = $validOrders->filter(fn($o) => $o->created_at->isSameDay($date))->sum('total') / 1000000;
         }
 
-        // 3. CHART: Kunjungan per Jam (7 hari terakhir agar selalu ada data)
-        $visitLabels = ['00:00','06:00','08:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'];
-        $visitData   = array_fill(0, 10, 0);
+        // 3. CHART: Kunjungan per Jam (7 hari terakhir) — 1 jam per bucket agar akurat
+        $visitLabels = [];
+        $visitData   = [];
+        for ($h = 6; $h <= 23; $h++) {
+            $visitLabels[] = sprintf('%02d:00', $h);
+            $visitData[]   = 0;
+        }
         $last7Orders = $validOrders->filter(fn($o) => $o->created_at->gte(\Carbon\Carbon::today()->subDays(6)->startOfDay()));
         foreach ($last7Orders as $order) {
             $h = $order->created_at->hour;
-            if ($h >= 0  && $h < 6)   $visitData[0]++;   // 00:00-06:00 (dini hari)
-            elseif ($h >= 6  && $h < 8)   $visitData[1]++;   // 06:00-08:00 (pagi awal)
-            elseif ($h >= 8  && $h < 10)  $visitData[2]++;   // 08:00-10:00
-            elseif ($h >= 10 && $h < 12)  $visitData[3]++;   // 10:00-12:00
-            elseif ($h >= 12 && $h < 14)  $visitData[4]++;   // 12:00-14:00
-            elseif ($h >= 14 && $h < 16)  $visitData[5]++;   // 14:00-16:00
-            elseif ($h >= 16 && $h < 18)  $visitData[6]++;   // 16:00-18:00
-            elseif ($h >= 18 && $h < 20)  $visitData[7]++;   // 18:00-20:00
-            elseif ($h >= 20 && $h < 22)  $visitData[8]++;   // 20:00-22:00
-            else                          $visitData[9]++;   // 22:00-24:00 (malam)
+            if ($h >= 6 && $h <= 23) {
+                $visitData[$h - 6]++;
+            }
         }
 
         // 4. Top Menu Chart
