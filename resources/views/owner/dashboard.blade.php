@@ -444,8 +444,11 @@ function ownerAnalytics() {
                 const res = await fetch(this._url('/owner/api/analytics/data'), { headers: { Accept: 'application/json' } });
                 this.data = await res.json();
                 this.loading = false;
-                // $nextTick: tunggu Alpine update DOM (tampilkan !loading div) baru render chart
-                this.$nextTick(() => this.renderCharts());
+                // $nextTick: tunggu Alpine update DOM baru render chart
+                // Tambah fallback setTimeout untuk device/browser lambat
+                this.$nextTick(() => {
+                    setTimeout(() => this.renderCharts(), 100);
+                });
             } catch(e) { 
                 console.error('Owner analytics error:', e); 
                 this.loading = false;
