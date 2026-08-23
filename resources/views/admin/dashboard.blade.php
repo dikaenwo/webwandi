@@ -1772,35 +1772,45 @@
         // Visit Line Chart
         const visitCtx = document.getElementById('visitChart');
         if (visitCtx) {
+            const visitRawData = {{ Illuminate\Support\Js::from($visitData) }};
+            const visitMax = Math.max(...visitRawData, 1); // minimal 1 agar skala tidak desimal
             new Chart(visitCtx, {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: {{ Illuminate\Support\Js::from($visitLabels) }},
                     datasets: [{
-                        label: 'Pengunjung',
-                        data: {{ Illuminate\Support\Js::from($visitData) }},
-                        borderColor: '#34d399', // Kept green for specific highlight
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: false,
-                        pointBackgroundColor: '#34d399',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#34d399'
+                        label: 'Jumlah Order',
+                        data: visitRawData,
+                        backgroundColor: visitRawData.map((v) => v === visitMax && visitMax > 0 ? cDk : cLt + '80'),
+                        borderRadius: 6,
+                        maxBarThickness: 40,
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => ctx.raw + ' order'
+                            }
+                        }
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: { color: cLt, drawBorder: false },
-                            ticks: { color: cMd, font: { size: 10 } }
+                            border: { display: false },
+                            grid: { color: cLt + '60', drawBorder: false },
+                            ticks: {
+                                color: cMd,
+                                font: { size: 10 },
+                                precision: 0,        // angka bulat
+                                stepSize: 1          // step minimal 1
+                            }
                         },
                         x: {
+                            border: { display: false },
                             grid: { display: false },
                             ticks: { color: cMd, font: { size: 10 } }
                         }
