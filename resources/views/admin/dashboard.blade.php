@@ -122,6 +122,15 @@
     },
 
     menus: {{ Illuminate\Support\Js::from($menus) }},
+    menuSearch: '',
+    get filteredMenus() {
+        if (!this.menuSearch.trim()) return this.menus;
+        const q = this.menuSearch.trim().toLowerCase();
+        return this.menus.filter(m =>
+            m.name.toLowerCase().includes(q) ||
+            (m.category && m.category.name.toLowerCase().includes(q))
+        );
+    },
     showMenuModal: false,
     showMenuDeleteConfirm: false,
     menuToDelete: null,
@@ -772,7 +781,13 @@
         {{-- ======= MENU MANAGEMENT PAGE ======= --}}
         <div x-show="activePage === 'menu'" class="space-y-5">
             <div class="flex flex-wrap gap-3 items-center justify-between">
-                <input type="text" placeholder="Cari menu..." class="input-field max-w-xs text-xs py-2">
+                <div class="relative">
+                    <i data-lucide="search" class="w-3.5 h-3.5 text-[var(--c-md)]/50 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                    <input type="text" x-model="menuSearch" placeholder="Cari nama / kategori..." class="input-field max-w-xs text-xs py-2 pl-8 pr-8">
+                    <button x-show="menuSearch" @click="menuSearch = ''" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--c-md)]/50 hover:text-[var(--c-dk)] transition-colors">
+                        <i data-lucide="x" class="w-3 h-3"></i>
+                    </button>
+                </div>
                 <button @click="openAddMenu()" class="btn-primary text-xs py-2.5">
                     <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                     Tambah Menu
@@ -793,7 +808,17 @@
                             </tr>
                         </thead>
                         <tbody x-data class="divide-y divide-[var(--c-lt)]/10">
-                            <template x-for="item in menus" :key="item.id">
+                            {{-- Empty state saat pencarian tidak ditemukan --}}
+                            <tr x-show="filteredMenus.length === 0">
+                                <td colspan="6" class="py-10 text-center">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <i data-lucide="search-x" class="w-8 h-8 text-[var(--c-lt)]"></i>
+                                        <p class="text-sm font-semibold text-[var(--c-dk)]/60">Menu tidak ditemukan</p>
+                                        <p class="text-xs text-[var(--c-md)]/50">Coba kata kunci lain</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <template x-for="item in filteredMenus" :key="item.id">
                                 <tr class="hover:bg-[var(--c-bg)]/30 transition-colors duration-150">
                                     <td class="table-cell">
                                         <div class="flex items-center gap-3">

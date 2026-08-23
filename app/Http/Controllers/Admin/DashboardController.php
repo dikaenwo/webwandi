@@ -11,34 +11,42 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Hitung total terjual per menu dari semua order valid
-        $allOrders = \App\Models\Order::whereNotIn('status', ['pending', 'cancelled'])->get();
-        $salesCount = [];
-        foreach ($allOrders as $ord) {
+        $tables     = Table::orderBy('number')->get();
+        $categories = \App\Models\Category::orderBy('sort_order')->get();
+        $today      = \Carbon\Carbon::today();
+
+        // ── Satu query untuk semua kalkulasi order ──────────────────────────
+        $validOrders = \App\Models\Order::whereNotIn('status', ['pending', 'cancelled'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Agregasi sales per menu_id (untuk kolom Terjual) & per nama (untuk Top Menu chart)
+        $salesCount  = [];
+        $menuSales   = [];
+        $totalItems  = 0;
+        foreach ($validOrders as $ord) {
             if (is_array($ord->items)) {
                 foreach ($ord->items as $item) {
-                    $mid = $item['id'] ?? null;
-                    if ($mid) {
-                        $salesCount[$mid] = ($salesCount[$mid] ?? 0) + ($item['qty'] ?? 1);
+                    $qty = $item['qty'] ?? 1;
+                    // by ID → kolom Terjual di tabel menu
+                    if (!empty($item['id'])) {
+                        $salesCount[$item['id']] = ($salesCount[$item['id']] ?? 0) + $qty;
                     }
+                    // by name → Top Menu chart
+                    $menuSales[$item['name']] = ($menuSales[$item['name']] ?? 0) + $qty;
+                    $totalItems += $qty;
                 }
             }
         }
 
+        // Inject field `sold` ke tiap menu
         $menus = Menu::with('category')->orderBy('sort_order')->get()->map(function ($menu) use ($salesCount) {
             $menu->sold = $salesCount[$menu->id] ?? 0;
             return $menu;
         });
-        $tables = Table::orderBy('number')->get();
-        $categories = \App\Models\Category::orderBy('sort_order')->get();
-        
-        $today = \Carbon\Carbon::today();
 
-        // Orders that are paid or further along (exclude pending/cancelled)
-        $validOrders = \App\Models\Order::whereNotIn('status', ['pending', 'cancelled'])->orderBy('created_at', 'desc')->get();
-        
-        // Formatted Orders for the frontend
-        $orders = $validOrders->map(function($order) {
+        // Formatted Orders untuk frontend (hanya 50 terbaru agar JSON tidak besar)
+        $orders = $validOrders->take(50)->map(function($order) {
             return [
                 'id'            => $order->order_id,
                 'table'         => $order->table_number,
@@ -56,16 +64,10 @@ class DashboardController extends Controller
         });
 
         // 1. STATS
-        $todayOrders = $validOrders->filter(function($o) use ($today) {
-            return $o->created_at->isSameDay($today);
-        });
-        
+        $todayOrders      = $validOrders->filter(fn($o) => $o->created_at->isSameDay($today));
         $totalOrderHariIni = $todayOrders->count();
         $pendapatanHariIni = $todayOrders->sum('total');
-        
-        $pesananAktif = $validOrders->filter(function($o) {
-            return in_array($o->status, ['paid', 'making', 'ready']);
-        })->count();
+        $pesananAktif      = $validOrders->filter(fn($o) => in_array($o->status, ['paid', 'making', 'ready']))->count();
 
         $stats = [
             'total_order' => $totalOrderHariIni,
@@ -73,87 +75,43 @@ class DashboardController extends Controller
             'aktif'       => $pesananAktif,
         ];
 
-        // 2. CHART: Penjualan 7 Hari Terakhir (Minggu)
-        $salesData = [];
-        $salesLabels = [];
+        // 2. CHART: Penjualan 7 Hari Terakhir
+        $salesData = []; $salesLabels = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = \Carbon\Carbon::today()->subDays($i);
             $salesLabels[] = $date->isoFormat('ddd');
-            
-            $dayTotal = $validOrders->filter(function($o) use ($date) {
-                return $o->created_at->isSameDay($date);
-            })->sum('total');
-            
-            $salesData[] = $dayTotal / 1000000; // in millions for the chart
+            $salesData[]   = $validOrders->filter(fn($o) => $o->created_at->isSameDay($date))->sum('total') / 1000000;
         }
 
-        // 2b. CHART: Penjualan 30 Hari Terakhir (Bulan)
-        $salesDataMonth = [];
-        $salesLabelsMonth = [];
+        // 2b. CHART: Penjualan 30 Hari Terakhir
+        $salesDataMonth = []; $salesLabelsMonth = [];
         for ($i = 29; $i >= 0; $i--) {
             $date = \Carbon\Carbon::today()->subDays($i);
-            // Show label only every few days to keep chart readable
             $salesLabelsMonth[] = $date->format('d/m');
-            
-            $dayTotal = $validOrders->filter(function($o) use ($date) {
-                return $o->created_at->isSameDay($date);
-            })->sum('total');
-            
-            $salesDataMonth[] = $dayTotal / 1000000; // in millions
+            $salesDataMonth[]   = $validOrders->filter(fn($o) => $o->created_at->isSameDay($date))->sum('total') / 1000000;
         }
 
-
-        // 3. CHART: Kunjungan (Jam) Hari Ini
-        $visitData = array_fill(0, 8, 0); // 08:00, 10:00, 12:00, 14:00, 16:00, 18:00, 20:00, 22:00
+        // 3. CHART: Kunjungan per Jam
+        $visitData   = array_fill(0, 8, 0);
         $visitLabels = ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'];
         foreach ($todayOrders as $order) {
-            $hour = $order->created_at->hour;
-            if ($hour >= 8 && $hour < 10) $visitData[0]++;
-            elseif ($hour >= 10 && $hour < 12) $visitData[1]++;
-            elseif ($hour >= 12 && $hour < 14) $visitData[2]++;
-            elseif ($hour >= 14 && $hour < 16) $visitData[3]++;
-            elseif ($hour >= 16 && $hour < 18) $visitData[4]++;
-            elseif ($hour >= 18 && $hour < 20) $visitData[5]++;
-            elseif ($hour >= 20 && $hour < 22) $visitData[6]++;
-            elseif ($hour >= 22) $visitData[7]++;
+            $h = $order->created_at->hour;
+            if ($h >= 8 && $h < 10)       $visitData[0]++;
+            elseif ($h >= 10 && $h < 12)  $visitData[1]++;
+            elseif ($h >= 12 && $h < 14)  $visitData[2]++;
+            elseif ($h >= 14 && $h < 16)  $visitData[3]++;
+            elseif ($h >= 16 && $h < 18)  $visitData[4]++;
+            elseif ($h >= 18 && $h < 20)  $visitData[5]++;
+            elseif ($h >= 20 && $h < 22)  $visitData[6]++;
+            elseif ($h >= 22)             $visitData[7]++;
         }
 
-        // 4. CHART: Kategori & Top Menus
-        $categorySales = [];
-        $menuSales = [];
-        foreach ($validOrders as $order) {
-            if (is_array($order->items)) {
-                foreach ($order->items as $item) {
-                    // Count by menu name
-                    $name = $item['name'];
-                    if (!isset($menuSales[$name])) $menuSales[$name] = 0;
-                    $menuSales[$name] += $item['qty'];
-
-                    // We don't have direct category_id in items, we match by name temporarily
-                    // A better way is to attach category info in items JSON, but we can search it
-                }
-            }
-        }
-        
-        // Sort top menus
+        // 4. Top Menu Chart
         arsort($menuSales);
-        $topMenus = collect($menuSales)->take(4)->map(function($qty, $name) use ($validOrders) {
-            // Rough percentage of total items
-            $totalItems = 0;
-            foreach ($validOrders as $o) {
-                if(is_array($o->items)) {
-                    foreach($o->items as $i) $totalItems += $i['qty'];
-                }
-            }
-            $pct = $totalItems > 0 ? round(($qty / $totalItems) * 100) : 0;
-            return [
-                'name' => $name,
-                'pct' => $pct,
-                'emoji' => '☕' // Default emoji
-            ];
+        $topMenus = collect($menuSales)->take(4)->map(function($qty, $name) use ($totalItems) {
+            return ['name' => $name, 'pct' => $totalItems > 0 ? round(($qty / $totalItems) * 100) : 0, 'emoji' => '☕'];
         })->values()->toArray();
 
-        // Dummy Category data until we store category_id in order items
         $categoryChart = [
             'labels' => ['Kopi Panas', 'Kopi Dingin', 'Non Kopi', 'Makanan'],
             'data'   => [35, 45, 10, 10]
@@ -164,7 +122,6 @@ class DashboardController extends Controller
             'salesLabelsMonth', 'salesDataMonth',
             'visitLabels', 'visitData', 'topMenus', 'categoryChart', 'tables'
         ));
-
     }
 
     public function updateOrderStatus(Request $request, $id)
