@@ -208,7 +208,8 @@
             </div>
         </div>
 
-        <div x-show="!loading" class="space-y-5">
+        {{-- Chart + Data (selalu di DOM, gunakan visibility bukan display:none) --}}
+        <div class="space-y-5" :style="loading ? 'visibility:hidden;pointer-events:none' : 'visibility:visible'">
             {{-- Summary dari filter --}}
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="bg-white rounded-2xl border border-[var(--c-lt)]/30 p-4 shadow-sm">
