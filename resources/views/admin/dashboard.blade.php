@@ -733,7 +733,8 @@
 
 
         {{-- ======= CATEGORY MANAGEMENT PAGE ======= --}}
-        <div x-show="activePage === 'categories'" class="space-y-5">
+        <template x-if="activePage === 'categories'">
+        <div class="space-y-5">
             <div class="flex flex-wrap gap-3 items-center justify-between">
                 <div>
                     <h2 class="font-bold text-[var(--c-dk)] text-base">Kategori Menu</h2>
@@ -777,9 +778,11 @@
                 </div>
             </div>
         </div>
+        </template>
 
         {{-- ======= MENU MANAGEMENT PAGE ======= --}}
-        <div x-show="activePage === 'menu'" class="space-y-5">
+        <template x-if="activePage === 'menu'">
+        <div class="space-y-5">
             <div class="flex flex-wrap gap-3 items-center justify-between">
                 {{-- Search Bar: flex wrapper agar icon & input tidak overlap --}}
                 <div class="flex items-center gap-2 bg-white border border-[var(--c-lt)] rounded-xl px-3 py-2 w-64 focus-within:ring-2 focus-within:ring-[var(--c-md)]/40 focus-within:border-[var(--c-md)] transition-all duration-200">
@@ -894,9 +897,11 @@
                 </div>
             </div>
         </div>
+        </template>
 
         {{-- ======= TABLES PAGE ======= --}}
-        <div x-show="activePage === 'tables'" class="space-y-5">
+        <template x-if="activePage === 'tables'">
+        <div class="space-y-5">
 
             {{-- Header row --}}
             <div class="flex flex-wrap gap-3 items-center justify-between">
@@ -956,9 +961,11 @@
                 </template>
             </div>
         </div>
+        </template>
 
         {{-- ======= SETTINGS PAGE ======= --}}
-        <div x-show="activePage === 'settings'" class="max-w-xl mx-auto space-y-6" x-cloak
+        <template x-if="activePage === 'settings'">
+        <div class="max-w-xl mx-auto space-y-6"
              x-data="{
                 loading: false,
                 successMsg: '',
@@ -1032,12 +1039,14 @@
                 </form>
             </div>
         </div>
+        </template>
 
         {{-- ======= ANALYTICS PAGE ======= --}}
-        <div x-show="activePage === 'analytics'" x-data="analyticsApp()"
+        <template x-if="activePage === 'analytics'">
+        <div x-data="analyticsApp()"
              x-init="init(); $watch('activeChart', () => { if (!loading && Object.keys(analyticsData).length) renderCharts(); });"
              @load-analytics.window="loadData()"
-             class="space-y-5" x-cloak>
+             class="space-y-5">
 
             {{-- Filter Bar --}}
             <div class="bg-white rounded-2xl border border-[var(--c-lt)]/30 p-4 shadow-sm">
@@ -1211,6 +1220,7 @@
                 </div>
             </div>
         </div>
+        </template>
 
     </main>
 

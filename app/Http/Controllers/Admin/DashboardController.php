@@ -51,7 +51,6 @@ class DashboardController extends Controller
                 'id'            => $order->order_id,
                 'table'         => $order->table_number,
                 'items_count'   => is_array($order->items) ? count($order->items) : 0,
-                'items_detail'  => is_array($order->items) ? $order->items : [],
                 'total'         => $order->total,
                 'subtotal'      => $order->subtotal,
                 'tax'           => $order->tax,
