@@ -1146,7 +1146,8 @@
                 </div>
             </div>
 
-            <div x-show="!loading" class="space-y-5">
+            {{-- Data section: visibility (bukan display:none) agar canvas punya dimensi --}}
+            <div class="space-y-5" :style="loading ? 'visibility:hidden;pointer-events:none' : 'visibility:visible'">
                 {{-- Summary Cards --}}
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="stat-card bg-[var(--c-dk)] border-none">
@@ -1988,8 +1989,10 @@ function analyticsApp() {
                 const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
                 this.analyticsData = await res.json();
                 this.loading = false;
-                // $nextTick: tunggu Alpine update DOM baru render chart
-                this.$nextTick(() => this.renderCharts());
+                // $nextTick + 200ms agar DOM update visibility selesai sebelum render chart
+                this.$nextTick(() => {
+                    setTimeout(() => this.renderCharts(), 200);
+                });
             } catch (e) {
                 console.error('Analytics load error:', e);
                 this.loading = false;
@@ -1998,15 +2001,23 @@ function analyticsApp() {
 
         renderCharts() {
             const style = getComputedStyle(document.body);
-            const cDk   = style.getPropertyValue('--c-dk').trim();
-            const cMd   = style.getPropertyValue('--c-md').trim();
-            const cLt   = style.getPropertyValue('--c-lt').trim();
+            // Fallback warna jika CSS vars belum terbaca di beberapa browser
+            const cDk = style.getPropertyValue('--c-dk').trim() || '#1a3c34';
+            const cMd = style.getPropertyValue('--c-md').trim() || '#2d6a5e';
+            const cLt = style.getPropertyValue('--c-lt').trim() || '#84c5b4';
+
+            // Destroy semua chart lama dengan Chart.getChart() untuk bebaskan canvas context
+            ['analyticsMainChart', 'analyticsPeakChart'].forEach(id => {
+                const ex = Chart.getChart(id);
+                if (ex) ex.destroy();
+            });
+            if (this.mainChart) { try { this.mainChart.destroy(); } catch(e) {} this.mainChart = null; }
+            if (this.peakChart) { try { this.peakChart.destroy(); } catch(e) {} this.peakChart = null; }
 
             // ── Main Chart ──
             const mainCtx = document.getElementById('analyticsMainChart');
             if (mainCtx) {
-                if (this.mainChart) this.mainChart.destroy();
-
+                try {
                 const isRevenue = this.activeChart === 'revenue';
                 const chartData = this.analyticsData.chart || { labels: [], revenue: [], orders: [] };
 
@@ -2063,13 +2074,15 @@ function analyticsApp() {
                         }
                     }
                 });
+                } catch(err) { console.error('Admin main chart error:', err); }
             }
 
             // ── Peak Hours Chart ──
             const peakCtx = document.getElementById('analyticsPeakChart');
             if (peakCtx) {
-                if (this.peakChart) this.peakChart.destroy();
+                try {
                 const peak = this.analyticsData.peak_hours || { labels: [], data: [] };
+                const maxPeak = Math.max(...peak.data, 1);
                 this.peakChart = new Chart(peakCtx, {
                     type: 'bar',
                     data: {
@@ -2077,10 +2090,7 @@ function analyticsApp() {
                         datasets: [{
                             label: 'Jumlah Order',
                             data: peak.data,
-                            backgroundColor: peak.data.map(v => {
-                                const max = Math.max(...peak.data);
-                                return v === max ? cDk : cLt;
-                            }),
+                            backgroundColor: peak.data.map(v => v === maxPeak && maxPeak > 0 ? cDk : cLt + '90'),
                             borderRadius: 6,
                             maxBarThickness: 40
                         }]
@@ -2094,7 +2104,7 @@ function analyticsApp() {
                                 beginAtZero: true,
                                 border: { display: false },
                                 grid: { color: cLt, drawBorder: false },
-                                ticks: { color: cMd, font: { size: 10 } }
+                                ticks: { color: cMd, font: { size: 10 }, precision: 0, stepSize: 1 }
                             },
                             x: {
                                 border: { display: false },
@@ -2104,7 +2114,10 @@ function analyticsApp() {
                         }
                     }
                 });
+                } catch(err) { console.error('Admin peak chart error:', err); }
             }
+            // Force resize agar Chart.js recalculate dimensi canvas
+            setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
         },
 
         // Re-render when chart type switches
