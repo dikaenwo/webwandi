@@ -1898,9 +1898,8 @@ function analyticsApp() {
                 const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
                 this.analyticsData = await res.json();
                 this.loading = false;
-                setTimeout(() => {
-                    this.renderCharts();
-                }, 50);
+                // $nextTick: tunggu Alpine update DOM baru render chart
+                this.$nextTick(() => this.renderCharts());
             } catch (e) {
                 console.error('Analytics load error:', e);
                 this.loading = false;

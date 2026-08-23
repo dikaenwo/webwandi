@@ -166,7 +166,8 @@
     </div>
 
     {{-- ── Analytics Section dengan Filter ── --}}
-    <div x-data="ownerAnalytics()" x-init="init(); $watch('activeChart', () => { if (!loading && Object.keys(data).length) renderCharts(); });"
+    <div x-data="ownerAnalytics()"
+         x-init="init(); $watch('activeChart', (val) => { if (!loading && Object.keys(data).length) $nextTick(() => renderCharts()); });"
          class="space-y-5">
 
         {{-- Filter Bar --}}
@@ -443,11 +444,10 @@ function ownerAnalytics() {
                 const res = await fetch(this._url('/owner/api/analytics/data'), { headers: { Accept: 'application/json' } });
                 this.data = await res.json();
                 this.loading = false;
-                setTimeout(() => {
-                    this.renderCharts();
-                }, 50);
+                // $nextTick: tunggu Alpine update DOM (tampilkan !loading div) baru render chart
+                this.$nextTick(() => this.renderCharts());
             } catch(e) { 
-                console.error(e); 
+                console.error('Owner analytics error:', e); 
                 this.loading = false;
             }
         },
