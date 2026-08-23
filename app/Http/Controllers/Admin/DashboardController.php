@@ -11,7 +11,24 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $menus = Menu::with('category')->orderBy('sort_order')->get();
+        // Hitung total terjual per menu dari semua order valid
+        $allOrders = \App\Models\Order::whereNotIn('status', ['pending', 'cancelled'])->get();
+        $salesCount = [];
+        foreach ($allOrders as $ord) {
+            if (is_array($ord->items)) {
+                foreach ($ord->items as $item) {
+                    $mid = $item['id'] ?? null;
+                    if ($mid) {
+                        $salesCount[$mid] = ($salesCount[$mid] ?? 0) + ($item['qty'] ?? 1);
+                    }
+                }
+            }
+        }
+
+        $menus = Menu::with('category')->orderBy('sort_order')->get()->map(function ($menu) use ($salesCount) {
+            $menu->sold = $salesCount[$menu->id] ?? 0;
+            return $menu;
+        });
         $tables = Table::orderBy('number')->get();
         $categories = \App\Models\Category::orderBy('sort_order')->get();
         
