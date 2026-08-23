@@ -42,9 +42,9 @@ Route::get('/', function () {
         }
     }
 
-    // Ambil SEMUA menu yang pernah terjual (urut dari terbanyak) — tidak dibatasi 4
+    // Ambil top 4 menu berdasarkan total qty terjual
     arsort($salesCount);
-    $topIds = array_keys($salesCount); // semua ID yang ada transaksi
+    $topIds = array_slice(array_keys($salesCount), 0, 4);
 
     // Ambil menu yang sudah terjual (urut dari terbanyak)
     $bestSellers = collect();
@@ -107,7 +107,7 @@ Route::get('/api/best-sellers', function () {
     }
 
     arsort($salesCount);
-    $topIds = array_keys($salesCount); // semua item yang pernah terjual
+    $topIds = array_slice(array_keys($salesCount), 0, 4);
 
     $bestSellers = collect();
     if (!empty($topIds)) {
