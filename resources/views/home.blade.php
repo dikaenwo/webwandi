@@ -78,7 +78,9 @@
 
 
 {{-- ===================== BESTSELLER SECTION ===================== --}}
-<section class="py-20 md:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" id="bestseller">
+<section class="py-20 md:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" id="bestseller"
+         x-data="bestSellerApp()"
+         x-init="init()">
 
     <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4"
          x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'reveal active' : 'reveal'">
@@ -87,62 +89,160 @@
                 <div class="w-8 h-px bg-[var(--c-md)]"></div>
                 <span class="text-xs font-bold text-[var(--c-md)] uppercase tracking-[0.2em]">Favorit Pelanggan</span>
             </div>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-[var(--c-dk)] tracking-tight">Best Seller</h2>
+            <div class="flex items-center gap-3 flex-wrap">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-[var(--c-dk)] tracking-tight">Best Seller</h2>
+                {{-- LIVE Badge --}}
+                <span class="flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    Live
+                </span>
+            </div>
             <p class="text-[var(--c-md)]/60 text-sm mt-2">Menu yang paling banyak dipesan berdasarkan data transaksi</p>
+            {{-- Last updated --}}
+            <p class="text-[10px] text-[var(--c-md)]/40 mt-1 font-medium"
+               x-show="lastUpdated" x-cloak
+               x-text="'Diperbarui ' + lastUpdated"></p>
         </div>
         <a href="{{ route('menu') }}" class="btn-outline shrink-0 self-start sm:self-auto">
             Lihat Semua <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </a>
     </div>
 
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+    {{-- Cards Grid --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 relative"
          x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'reveal active' : 'reveal'">
-        @foreach($bestSellers as $item)
-        <div class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 cursor-pointer border border-[var(--c-lt)]/20" id="bestseller-card-{{ $item->id }}">
-            {{-- Image Area --}}
-            <div class="relative overflow-hidden h-52 bg-[var(--c-dk)]">
-                @if($item->image_url)
-                    <img src="{{ $item->image_url }}" alt="{{ $item->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                @else
-                    {{-- Icon --}}
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="w-20 h-20 rounded-3xl bg-white/8 flex items-center justify-center group-hover:scale-110 transition-all duration-500 border border-white/10">
-                            <i data-lucide="coffee" class="w-9 h-9 text-[var(--c-lt)]"></i>
+
+        {{-- Skeleton saat loading pertama --}}
+        <template x-if="items.length === 0">
+            <template x-for="i in [1,2,3,4]" :key="i">
+                <div class="bg-white rounded-3xl overflow-hidden border border-[var(--c-lt)]/20 animate-pulse">
+                    <div class="h-52 bg-[var(--c-lt)]/30"></div>
+                    <div class="p-5 space-y-3">
+                        <div class="h-4 bg-[var(--c-lt)]/30 rounded-full w-3/4"></div>
+                        <div class="h-3 bg-[var(--c-lt)]/20 rounded-full w-full"></div>
+                        <div class="h-3 bg-[var(--c-lt)]/20 rounded-full w-2/3"></div>
+                        <div class="h-5 bg-[var(--c-lt)]/30 rounded-full w-1/2 mt-2"></div>
+                    </div>
+                </div>
+            </template>
+        </template>
+
+        {{-- Real items --}}
+        <template x-for="item in items" :key="item.id">
+            <div class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 cursor-pointer border border-[var(--c-lt)]/20"
+                 :id="'bs-card-' + item.id">
+                {{-- Image --}}
+                <div class="relative overflow-hidden h-52 bg-[var(--c-dk)]">
+                    <template x-if="item.image_url">
+                        <img :src="item.image_url" :alt="item.name"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </template>
+                    <template x-if="!item.image_url">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-20 h-20 rounded-3xl bg-white/8 flex items-center justify-center group-hover:scale-110 transition-all duration-500 border border-white/10">
+                                <i data-lucide="coffee" class="w-9 h-9 text-[var(--c-lt)]"></i>
+                            </div>
+                        </div>
+                    </template>
+                    {{-- TERLARIS badge --}}
+                    <template x-if="item.total_sold > 0">
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-[#DDD3C9] text-[var(--c-dk)] text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1">
+                                <i data-lucide="flame" class="w-3 h-3"></i> TERLARIS
+                            </span>
+                        </div>
+                    </template>
+                </div>
+                {{-- Content --}}
+                <div class="p-5">
+                    <h3 class="font-bold text-[var(--c-dk)] text-sm leading-snug mb-1" x-text="item.name"></h3>
+                    <p class="text-[var(--c-md)]/60 text-xs leading-relaxed mb-4 line-clamp-2" x-text="item.description"></p>
+                    <div class="flex items-center justify-between">
+                        <span class="font-extrabold text-[var(--c-dk)] text-base"
+                              x-text="'Rp ' + item.price.toLocaleString('id-ID')"></span>
+                        <div class="flex items-center gap-1.5 bg-[var(--c-bg)] px-2.5 py-1 rounded-full">
+                            <i data-lucide="star" class="w-3 h-3 text-[var(--c-md)] fill-[var(--c-md)]"></i>
+                            <span class="text-xs font-bold text-[var(--c-dk)]" x-text="parseFloat(item.rating).toFixed(1)"></span>
                         </div>
                     </div>
-                @endif
-                {{-- Best Seller Badge: hanya tampil jika benar-benar pernah terjual --}}
-                @if(($item->total_sold ?? 0) > 0)
-                <div class="absolute top-4 left-4">
-                    <span class="bg-[#DDD3C9] text-[var(--c-dk)] text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1">
-                        <i data-lucide="flame" class="w-3 h-3"></i> TERLARIS
-                    </span>
+                    <template x-if="item.total_sold > 0">
+                        <div class="mt-2 flex items-center gap-1 text-[var(--c-md)]/60">
+                            <i data-lucide="shopping-bag" class="w-3 h-3"></i>
+                            <span class="text-[11px] font-medium" x-text="item.total_sold + ' terjual'"></span>
+                        </div>
+                    </template>
                 </div>
-                @endif
             </div>
-            {{-- Content --}}
-            <div class="p-5">
-                <h3 class="font-bold text-[var(--c-dk)] text-sm leading-snug mb-1">{{ $item->name }}</h3>
-                <p class="text-[var(--c-md)]/60 text-xs leading-relaxed mb-4 line-clamp-2">{{ $item->description }}</p>
-                <div class="flex items-center justify-between">
-                    <span class="font-extrabold text-[var(--c-dk)] text-base">Rp {{ number_format($item->price, 0, ',', '.') }}</span>
-                    <div class="flex items-center gap-1.5 bg-[var(--c-bg)] px-2.5 py-1 rounded-full">
-                        <i data-lucide="star" class="w-3 h-3 text-[var(--c-md)] fill-[var(--c-md)]"></i>
-                        <span class="text-xs font-bold text-[var(--c-dk)]">{{ number_format($item->rating ?? 0, 1) }}</span>
-                    </div>
-                </div>
-                @if(($item->total_sold ?? 0) > 0)
-                <div class="mt-2 flex items-center gap-1 text-[var(--c-md)]/60">
-                    <i data-lucide="shopping-bag" class="w-3 h-3"></i>
-                    <span class="text-[11px] font-medium">{{ $item->total_sold }} terjual</span>
-                </div>
-                @endif
-            </div>
-        </div>
-        @endforeach
+        </template>
     </div>
 </section>
+
+<script>
+function bestSellerApp() {
+    return {
+        // Data awal dari server (tidak ada loading flash)
+        items: @json($bestSellers->map(fn($m) => [
+            'id'          => $m->id,
+            'name'        => $m->name,
+            'description' => $m->description,
+            'price'       => $m->price,
+            'image_url'   => $m->image_url,
+            'rating'      => $m->rating ?? 0,
+            'total_sold'  => $m->total_sold ?? 0,
+        ])),
+        lastUpdated: '',
+        _pollTimer: null,
+
+        init() {
+            this._setUpdatedNow();
+            // Mulai polling setiap 30 detik
+            this._pollTimer = setInterval(() => this.refresh(), 30000);
+            // Refresh icons setelah Alpine render
+            this.$nextTick(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); });
+        },
+
+        async refresh() {
+            try {
+                const res = await fetch('/api/best-sellers', { headers: { Accept: 'application/json' } });
+                if (!res.ok) return;
+                const data = await res.json();
+
+                // Cek apakah data berubah (bandingkan ID + total_sold)
+                const sig = (arr) => arr.map(i => i.id + ':' + i.total_sold).join(',');
+                if (sig(data) !== sig(this.items)) {
+                    // Fade out → update → fade in
+                    const grid = document.querySelector('[id^="bs-card-"]')?.closest('.grid');
+                    if (grid) {
+                        grid.style.transition = 'opacity 0.35s ease';
+                        grid.style.opacity = '0';
+                        await new Promise(r => setTimeout(r, 350));
+                        this.items = data;
+                        this.$nextTick(() => {
+                            if (typeof lucide !== 'undefined') lucide.createIcons();
+                            grid.style.opacity = '1';
+                        });
+                    } else {
+                        this.items = data;
+                        this.$nextTick(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); });
+                    }
+                }
+                this._setUpdatedNow();
+            } catch (e) {
+                console.warn('Best seller refresh failed:', e);
+            }
+        },
+
+        _setUpdatedNow() {
+            const now = new Date();
+            this.lastUpdated = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+    };
+}
+</script>
+
 
 
 {{-- ===================== CATEGORY SECTION ===================== --}}

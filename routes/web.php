@@ -87,7 +87,68 @@ Route::get('/', function () {
 })->name('home');
 
 
-// QR Scan Route
+// ── Public API: Best Sellers (dipakai oleh home page realtime polling) ──────
+Route::get('/api/best-sellers', function () {
+    $validOrders = \App\Models\Order::whereNotIn('status', ['pending', 'cancelled'])->get();
+
+    $salesCount = [];
+    foreach ($validOrders as $order) {
+        if (is_array($order->items)) {
+            foreach ($order->items as $item) {
+                $rawId = $item['id'] ?? null;
+                if ($rawId !== null) {
+                    $menuId = (int) explode('-', (string) $rawId)[0];
+                    if ($menuId > 0) {
+                        $salesCount[$menuId] = ($salesCount[$menuId] ?? 0) + ($item['qty'] ?? 1);
+                    }
+                }
+            }
+        }
+    }
+
+    arsort($salesCount);
+    $topIds = array_slice(array_keys($salesCount), 0, 4);
+
+    $bestSellers = collect();
+    if (!empty($topIds)) {
+        $raw = \App\Models\Menu::available()->whereIn('id', $topIds)->get()->keyBy('id');
+        $bestSellers = collect($topIds)
+            ->map(fn($id) => $raw->get($id))
+            ->filter()
+            ->map(function ($menu) use ($salesCount) {
+                $menu->total_sold = $salesCount[$menu->id] ?? 0;
+                return $menu;
+            })
+            ->values();
+    }
+
+    $needed     = 4 - $bestSellers->count();
+    $alreadyIds = $bestSellers->pluck('id')->toArray();
+    if ($needed > 0) {
+        $fillers = \App\Models\Menu::available()
+            ->when(!empty($alreadyIds), fn($q) => $q->whereNotIn('id', $alreadyIds))
+            ->orderByDesc('rating')
+            ->limit($needed)
+            ->get()
+            ->map(function ($menu) {
+                $menu->total_sold = 0;
+                return $menu;
+            });
+        $bestSellers = $bestSellers->concat($fillers)->values();
+    }
+
+    return response()->json($bestSellers->map(fn($m) => [
+        'id'          => $m->id,
+        'name'        => $m->name,
+        'description' => $m->description,
+        'price'       => $m->price,
+        'image_url'   => $m->image_url,
+        'rating'      => $m->rating ?? 0,
+        'total_sold'  => $m->total_sold ?? 0,
+    ]));
+})->name('api.best-sellers');
+
+
 Route::get('/scan/{table}', function ($table) {
     // A simple redirect to menu page with the table number as query parameter
     // The front-end Alpine.js will capture this and store it in localStorage
