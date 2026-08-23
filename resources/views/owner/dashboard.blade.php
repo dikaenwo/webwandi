@@ -462,9 +462,17 @@ function ownerAnalytics() {
             const cMd = style.getPropertyValue('--c-md').trim() || '#2d6a5e';
             const cLt = style.getPropertyValue('--c-lt').trim() || '#84c5b4';
 
+            // Destroy existing chart instances using Chart.getChart() untuk clean up semua context
+            ['ownerMainChart', 'ownerPeakChart'].forEach(id => {
+                const existing = Chart.getChart(id);
+                if (existing) existing.destroy();
+            });
+            if (this.mainChart)  { try { this.mainChart.destroy();  } catch(e) {} this.mainChart  = null; }
+            if (this.peakChart)  { try { this.peakChart.destroy();  } catch(e) {} this.peakChart  = null; }
+
             const mainCtx = document.getElementById('ownerMainChart');
             if (mainCtx) {
-                if (this.mainChart) this.mainChart.destroy();
+                try {
                 const isRev = this.activeChart === 'revenue';
                 const cd = this.data.chart || { labels: [], revenue: [], orders: [] };
                 this.mainChart = new Chart(mainCtx, {
@@ -526,12 +534,12 @@ function ownerAnalytics() {
                         }
                     }
                 });
+                } catch(err) { console.error('Main chart render error:', err); }
             }
 
-            // Peak hours chart
             const peakCtx = document.getElementById('ownerPeakChart');
             if (peakCtx) {
-                if (this.peakChart) this.peakChart.destroy();
+                try {
                 const pk = this.data.peak_hours || { labels: [], data: [] };
                 const maxVal = Math.max(...pk.data, 1);
                 this.peakChart = new Chart(peakCtx, {
@@ -562,7 +570,10 @@ function ownerAnalytics() {
                         }
                     }
                 });
+                } catch(err) { console.error('Peak chart render error:', err); }
             }
+            // Force Chart.js recalculate canvas size
+            setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
         }
     };
 }
