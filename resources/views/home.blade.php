@@ -180,19 +180,25 @@
     </div>
 </section>
 
+@php
+$bestSellersJson = $bestSellers->map(function ($m) {
+    return [
+        'id'          => $m->id,
+        'name'        => $m->name,
+        'description' => $m->description,
+        'price'       => $m->price,
+        'image_url'   => $m->image_url,
+        'rating'      => $m->rating ?? 0,
+        'total_sold'  => $m->total_sold ?? 0,
+    ];
+})->values();
+@endphp
+
 <script>
 function bestSellerApp() {
     return {
         // Data awal dari server (tidak ada loading flash)
-        items: @json($bestSellers->map(fn($m) => [
-            'id'          => $m->id,
-            'name'        => $m->name,
-            'description' => $m->description,
-            'price'       => $m->price,
-            'image_url'   => $m->image_url,
-            'rating'      => $m->rating ?? 0,
-            'total_sold'  => $m->total_sold ?? 0,
-        ])),
+        items: @json($bestSellersJson),
         lastUpdated: '',
         _pollTimer: null,
 
