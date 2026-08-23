@@ -1878,19 +1878,26 @@
             });
         }
 
-        // Category Doughnut Chart
+        // Category Doughnut Chart — data real dari transaksi
         const catCtx = document.getElementById('categoryChart');
         if (catCtx) {
             const catData = {{ Illuminate\Support\Js::from($categoryChart) }};
+            // Palet 6 warna berbasis tema
+            const catColors = [cDk, cMd, cLt, cAc,
+                getComputedStyle(document.body).getPropertyValue('--c-md-lt').trim() || '#8faba3',
+                '#c4b5a0'
+            ];
+            const totalQty = catData.data.reduce((a, b) => a + b, 0);
             new Chart(catCtx, {
                 type: 'doughnut',
                 data: {
                     labels: catData.labels,
                     datasets: [{
                         data: catData.data,
-                        backgroundColor: [cDk, cMd, cLt, cAc],
-                        borderWidth: 0,
-                        hoverOffset: 4
+                        backgroundColor: catData.labels.map((_, i) => catColors[i % catColors.length]),
+                        borderWidth: 2,
+                        borderColor: '#fff',
+                        hoverOffset: 8
                     }]
                 },
                 options: {
@@ -1899,10 +1906,24 @@
                     plugins: {
                         legend: {
                             position: 'right',
-                            labels: { color: cDk, font: { size: 11, family: 'Plus Jakarta Sans' }, usePointStyle: true, boxWidth: 8 }
+                            labels: {
+                                color: cDk,
+                                font: { size: 11, family: 'Plus Jakarta Sans' },
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                padding: 12
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => {
+                                    const pct = totalQty > 0 ? Math.round((ctx.raw / totalQty) * 100) : 0;
+                                    return ` ${ctx.raw} item (${pct}%)`;
+                                }
+                            }
                         }
                     },
-                    cutout: '70%'
+                    cutout: '68%'
                 }
             });
         }

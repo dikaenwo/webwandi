@@ -117,9 +117,36 @@ class DashboardController extends Controller
             return ['name' => $name, 'pct' => $totalItems > 0 ? round(($qty / $totalItems) * 100) : 0, 'emoji' => '☕'];
         })->values()->toArray();
 
+        // 5. CHART: Kategori Terfavorit (bulan ini) — data real dari transaksi
+        $menuIdToCategory = $menus->keyBy('id'); // sudah loaded dengan category
+        $monthStart       = \Carbon\Carbon::today()->subDays(29)->startOfDay();
+        $monthOrders      = $validOrders->filter(fn($o) => $o->created_at->gte($monthStart));
+
+        $catSales = [];
+        foreach ($monthOrders as $order) {
+            if (is_array($order->items)) {
+                foreach ($order->items as $item) {
+                    $rawId  = $item['id'] ?? null;
+                    $qty    = $item['qty'] ?? 1;
+                    if ($rawId !== null) {
+                        $menuId  = (int) explode('-', (string) $rawId)[0];
+                        $menu    = $menuIdToCategory->get($menuId);
+                        $catName = $menu?->category?->name ?? 'Lainnya';
+                    } else {
+                        $catName = 'Lainnya';
+                    }
+                    $catSales[$catName] = ($catSales[$catName] ?? 0) + $qty;
+                }
+            }
+        }
+
+        // Sort descending, ambil top 6
+        arsort($catSales);
+        $catSales = array_slice($catSales, 0, 6, true);
+
         $categoryChart = [
-            'labels' => ['Kopi Panas', 'Kopi Dingin', 'Non Kopi', 'Makanan'],
-            'data'   => [35, 45, 10, 10]
+            'labels' => array_keys($catSales) ?: ['Belum ada data'],
+            'data'   => array_values($catSales) ?: [1],
         ];
 
         return view('admin.dashboard', compact(
