@@ -482,24 +482,44 @@ function ownerAnalytics() {
                             pointHoverRadius: 6
                         }] 
                     },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => isRev ? 'Rp ' + ctx.raw.toLocaleString('id-ID') : ctx.raw + ' order' } } },
-                        scales: { 
-                            y: { 
-                                beginAtZero: true, 
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: cDk,
+                                titleColor: '#fff',
+                                bodyColor: 'rgba(255,255,255,0.8)',
+                                padding: 10,
+                                cornerRadius: 10,
+                                displayColors: false,
+                                callbacks: {
+                                    title: items => items[0]?.label ?? '',
+                                    label: ctx => isRev
+                                        ? 'Rp ' + (ctx.raw || 0).toLocaleString('id-ID')
+                                        : (ctx.raw || 0) + ' order'
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
                                 border: { display: false },
-                                grid: { color: cLt, drawBorder: false }, 
-                                ticks: { 
-                                    color: cMd, 
-                                    font: { size: 10 }, 
-                                    callback: v => isRev ? (v >= 1000000 ? (v/1000000).toFixed(1)+'jt' : (v >= 1000 ? (v/1000).toFixed(0)+'k' : v)) : v 
-                                } 
-                            }, 
-                            x: { 
+                                grid: { color: cLt, drawBorder: false },
+                                ticks: {
+                                    color: cMd,
+                                    font: { size: 10 },
+                                    callback: v => isRev ? (v >= 1000000 ? (v/1000000).toFixed(1)+'jt' : (v >= 1000 ? (v/1000).toFixed(0)+'k' : v)) : v
+                                }
+                            },
+                            x: {
                                 border: { display: false },
-                                grid: { display: false }, 
-                                ticks: { color: cMd, font: { size: 10 }, maxRotation: 45 } 
-                            } 
-                        } 
+                                grid: { display: false },
+                                ticks: { color: cMd, font: { size: 10 }, maxRotation: 45 }
+                            }
+                        }
                     }
                 });
             }
@@ -509,12 +529,33 @@ function ownerAnalytics() {
             if (peakCtx) {
                 if (this.peakChart) this.peakChart.destroy();
                 const pk = this.data.peak_hours || { labels: [], data: [] };
-                const maxVal = Math.max(...pk.data);
+                const maxVal = Math.max(...pk.data, 1);
                 this.peakChart = new Chart(peakCtx, {
                     type: 'bar',
-                    data: { labels: pk.labels, datasets: [{ data: pk.data, backgroundColor: pk.data.map(v => v === maxVal ? cDk : cLt), borderRadius: 6, maxBarThickness: 40 }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true, border: {display: false}, grid: { color: cLt, drawBorder: false }, ticks: { color: cMd, font: { size: 10 } } }, x: { border: {display: false}, grid: { display: false }, ticks: { color: cMd, font: { size: 9 } } } }
+                    data: { labels: pk.labels, datasets: [{ data: pk.data, backgroundColor: pk.data.map(v => v === maxVal && maxVal > 0 ? cDk : cLt + '90'), borderRadius: 6, maxBarThickness: 36 }] },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: cDk,
+                                titleColor: '#fff',
+                                bodyColor: 'rgba(255,255,255,0.8)',
+                                padding: 10,
+                                cornerRadius: 10,
+                                displayColors: false,
+                                callbacks: {
+                                    title: items => items[0]?.label ?? '',
+                                    label: ctx => (ctx.raw || 0) + ' order'
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, border: {display:false}, grid: { color: cLt, drawBorder: false }, ticks: { color: cMd, font: { size: 10 }, precision: 0, stepSize: 1 } },
+                            x: { border: {display:false}, grid: { display: false }, ticks: { color: cMd, font: { size: 9 } } }
+                        }
                     }
                 });
             }
