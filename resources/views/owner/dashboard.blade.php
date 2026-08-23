@@ -444,10 +444,9 @@ function ownerAnalytics() {
                 const res = await fetch(this._url('/owner/api/analytics/data'), { headers: { Accept: 'application/json' } });
                 this.data = await res.json();
                 this.loading = false;
-                // $nextTick: tunggu Alpine update DOM baru render chart
-                // Tambah fallback setTimeout untuk device/browser lambat
+                // $nextTick + 200ms fallback untuk semua device/browser
                 this.$nextTick(() => {
-                    setTimeout(() => this.renderCharts(), 100);
+                    setTimeout(() => this.renderCharts(), 200);
                 });
             } catch(e) { 
                 console.error('Owner analytics error:', e); 
@@ -457,9 +456,10 @@ function ownerAnalytics() {
 
         renderCharts() {
             const style = getComputedStyle(document.body);
-            const cDk = style.getPropertyValue('--c-dk').trim();
-            const cMd = style.getPropertyValue('--c-md').trim();
-            const cLt = style.getPropertyValue('--c-lt').trim();
+            // Fallback ke warna green theme jika CSS vars belum terbaca
+            const cDk = style.getPropertyValue('--c-dk').trim() || '#1a3c34';
+            const cMd = style.getPropertyValue('--c-md').trim() || '#2d6a5e';
+            const cLt = style.getPropertyValue('--c-lt').trim() || '#84c5b4';
 
             const mainCtx = document.getElementById('ownerMainChart');
             if (mainCtx) {
