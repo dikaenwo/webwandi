@@ -251,35 +251,71 @@ function bestSellerApp() {
 
 
 
-{{-- ===================== CATEGORY SECTION ===================== --}}
-<section class="py-20 bg-[var(--c-dk)]" id="categories">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12"
-             x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'reveal active' : 'reveal'">
-            <div class="flex items-center justify-center gap-3 mb-3">
-                <div class="w-8 h-px bg-[var(--c-lt)]/50"></div>
-                <span class="text-xs font-bold text-[var(--c-lt)]/70 uppercase tracking-[0.2em]">Eksplorasi</span>
-                <div class="w-8 h-px bg-[var(--c-lt)]/50"></div>
+{{-- ===================== TENTANG SKENA SECTION ===================== --}}
+<section class="py-0 overflow-hidden" id="tentang-skena">
+    <div class="flex flex-col lg:flex-row min-h-[540px] lg:min-h-[620px]">
+
+        {{-- LEFT: Image --}}
+        <div class="relative w-full lg:w-1/2 h-72 sm:h-96 lg:h-auto overflow-hidden"
+             x-data="{ shown: false }" x-intersect.once="shown = true"
+             :class="shown ? 'reveal active' : 'reveal'">
+            <img src="{{ asset('images/SKN-5.jpg') }}"
+                 alt="Interior Skena Coffee"
+                 class="absolute inset-0 w-full h-full object-cover">
+            {{-- Subtle right-edge fade ke white (transisi ke teks) --}}
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-white/20 lg:to-white pointer-events-none hidden lg:block"></div>
+            {{-- Bottom fade untuk mobile --}}
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white lg:hidden pointer-events-none"></div>
+
+            {{-- Floating quote chip --}}
+            <div class="absolute bottom-6 left-6 bg-white/90 backdrop-blur-md rounded-2xl px-5 py-3.5 shadow-xl border border-[var(--c-lt)]/30 max-w-[220px] hidden sm:block">
+                <p class="text-[11px] font-bold text-[var(--c-dk)] uppercase tracking-widest mb-1">Teman Skena</p>
+                <p class="text-[var(--c-md)]/80 text-xs leading-relaxed">Setiap yang datang bukan hanya pelanggan.</p>
             </div>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Menu Categories</h2>
-            <p class="text-[var(--c-lt)]/60 text-sm mt-2">Temukan minuman & makanan yang kamu sukai</p>
         </div>
 
-        {{-- Kategori dari database (dinamis) --}}
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4"
-             x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'reveal active' : 'reveal'">
-            @foreach($categories as $cat)
-            <a href="{{ route('menu', ['category' => $cat['id']]) }}"
-               id="cat-{{ \Illuminate\Support\Str::slug($cat['name']) }}"
-               class="group flex flex-col items-center p-6 bg-white/5 rounded-3xl hover:bg-white/10 active:scale-95 transition-all duration-300 text-center cursor-pointer border border-white/8 hover:border-white/20 backdrop-blur-sm">
-                <div class="w-16 h-16 rounded-2xl {{ $cat['bg'] }} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md">
-                    <i data-lucide="{{ $cat['icon'] }}" class="w-7 h-7 text-white"></i>
+        {{-- RIGHT: Text --}}
+        <div class="w-full lg:w-1/2 flex items-center bg-white px-8 sm:px-12 lg:px-16 xl:px-20 py-16 lg:py-20"
+             x-data="{ shown: false }" x-intersect.once="shown = true"
+             :class="shown ? 'reveal active' : 'reveal'">
+            <div class="max-w-lg">
+
+                {{-- Label --}}
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-8 h-px bg-[var(--c-md)]"></div>
+                    <span class="text-xs font-bold text-[var(--c-md)] uppercase tracking-[0.2em]">Tentang Skena</span>
                 </div>
-                <h3 class="font-bold text-white text-sm mb-1">{{ $cat['name'] }}</h3>
-                <span class="text-[10px] bg-white/10 text-[var(--c-lt)] px-3 py-1 rounded-full font-semibold border border-white/10 mt-auto">{{ $cat['count'] }} menu</span>
-            </a>
-            @endforeach
+
+                {{-- Heading --}}
+                <h2 class="text-4xl md:text-5xl font-extrabold text-[var(--c-dk)] tracking-tight leading-[1.1] mb-6">
+                    Cerita<br>
+                    <span class="text-[var(--c-md)]">Kita.</span>
+                </h2>
+
+                {{-- Body copy --}}
+                <div class="space-y-4 text-[var(--c-md)]/80 text-[15px] leading-relaxed">
+                    <p>Skena Coffee bukan sekadar tempat untuk menikmati kopi dan makanan, tetapi <strong class="text-[var(--c-dk)] font-semibold">ruang untuk bertemu, berbagi cerita, dan menciptakan momen bersama.</strong></p>
+                    <p>Bagi kami, setiap yang datang bukan hanya pelanggan, tetapi <strong class="text-[var(--c-dk)] font-semibold">Teman Skena</strong>—bagian dari cerita dan perjalanan Skena.</p>
+                    <p>Dari secangkir kopi, hidangan di meja, hingga obrolan sederhana, kami ingin setiap kunjungan terasa dekat, nyaman, dan punya cerita untuk dibawa pulang.</p>
+                </div>
+
+                {{-- Tagline --}}
+                <p class="mt-7 text-[var(--c-dk)] font-bold text-sm italic border-l-2 border-[var(--c-md)] pl-4 leading-snug">
+                    Skena Coffee — tempat bertemu, bercerita,<br>dan menjadi bagian dari Skena.
+                </p>
+
+                {{-- CTA --}}
+                <div class="mt-8">
+                    <a href="{{ route('menu') }}"
+                       class="inline-flex items-center gap-2 bg-[var(--c-dk)] text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-[var(--c-md)] transition-colors duration-300 shadow-md">
+                        Jelajahi Menu
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+            </div>
         </div>
+
     </div>
 </section>
 
