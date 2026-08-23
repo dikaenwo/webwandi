@@ -287,10 +287,9 @@ function bestSellerApp() {
                 </div>
 
                 {{-- Heading --}}
-                <h2 class="text-4xl md:text-5xl font-bold text-[var(--c-dk)] tracking-tight leading-[1.1] mb-6"
-                    style="font-family: 'Playfair Display', Georgia, serif;">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-[var(--c-dk)] tracking-tight leading-[1.1] mb-6">
                     Cerita<br>
-                    <em class="text-[var(--c-md)] not-italic">Kita.</em>
+                    <span class="text-[var(--c-md)]">Kita.</span>
                 </h2>
 
                 {{-- Body copy --}}
