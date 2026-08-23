@@ -192,7 +192,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 // =================== OWNER ROUTES ===================
-Route::prefix('owner')->name('owner.')->middleware('admin.auth')->group(function () {
+Route::prefix('owner')->name('owner.')->middleware(['admin.auth', 'owner.auth'])->group(function () {
     Route::get('/', [\App\Http\Controllers\Owner\OwnerController::class, 'index'])->name('dashboard');
     Route::get('/api/analytics/data', [\App\Http\Controllers\Owner\OwnerController::class, 'analyticsData'])->name('api.analytics.data');
     Route::get('/api/analytics/export-csv', [\App\Http\Controllers\Owner\OwnerController::class, 'exportCsv'])->name('api.analytics.csv');

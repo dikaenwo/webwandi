@@ -17,9 +17,11 @@ class OwnerAuth
             return redirect()->route('admin.login');
         }
 
+        // Non-owner yang mencoba akses /owner/* → redirect ke login
+        // (bukan ke admin dashboard, agar tidak cross-contaminate antar tab)
         if (!$user->isOwner()) {
-            // Admin yang mencoba akses /owner → redirect ke admin dashboard
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.login')
+                ->with('error', 'Akses ditolak. Halaman ini hanya untuk Owner.');
         }
 
         return $next($request);

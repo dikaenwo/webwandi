@@ -22,14 +22,12 @@ class AdminAuth
 
         $user = Auth::guard('admin')->user();
 
-        // Kasir users should not access admin panel
-        if ($user->isKasir() && $request->is('admin/*') && !$request->is('admin/logout')) {
-            return redirect()->route('kasir.dashboard');
-        }
-
-        // Owner users should not access admin panel (except logout)
-        if ($user->isOwner() && $request->is('admin/*') && !$request->is('admin/logout')) {
-            return redirect()->route('owner.dashboard');
+        // Kasir/Owner yang mencoba akses admin panel → redirect ke login
+        // BUKAN redirect ke dashboard mereka — ini mencegah tab admin tiba-tiba
+        // menampilkan halaman kasir/owner ketika sesi berubah di tab lain.
+        if (!$user->isAdmin() && $request->is('admin/*') && !$request->is('admin/logout')) {
+            return redirect()->route('admin.login')
+                ->with('error', 'Akses ditolak. Silakan login sebagai Admin.');
         }
 
         return $next($request);
