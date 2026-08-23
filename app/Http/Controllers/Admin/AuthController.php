@@ -10,8 +10,23 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
+        // Jika sudah login DAN mengakses login page secara langsung (bukan karena di-redirect oleh middleware),
+        // redirect ke dashboard sesuai role.
+        // PENTING: jika user diredirect ke sini karena role salah (misal kasir buka /owner),
+        // kita logout sesinya dan tampilkan form login dengan pesan — bukan redirect ke kasir.dashboard.
         if (Auth::guard('admin')->check()) {
             $user = Auth::guard('admin')->user();
+
+            // Cek apakah ada pesan error (berasal dari role middleware redirect)
+            // Jika ada, logout dan tampilkan form login dengan pesan tersebut
+            if (session()->has('error')) {
+                Auth::guard('admin')->logout();
+                session()->invalidate();
+                session()->regenerateToken();
+                return view('admin.login');
+            }
+
+            // Tidak ada error → user memang mengakses /admin/login langsung → redirect ke dashboard
             if ($user->isOwner()) {
                 return redirect()->route('owner.dashboard');
             }
