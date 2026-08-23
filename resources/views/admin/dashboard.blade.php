@@ -781,24 +781,22 @@
         {{-- ======= MENU MANAGEMENT PAGE ======= --}}
         <div x-show="activePage === 'menu'" class="space-y-5">
             <div class="flex flex-wrap gap-3 items-center justify-between">
-                {{-- Search Bar dengan SVG inline agar selalu render --}}
-                <div class="relative flex items-center">
-                    <span class="absolute left-3 pointer-events-none text-[var(--c-md)]/40">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                        </svg>
-                    </span>
+                {{-- Search Bar: flex wrapper agar icon & input tidak overlap --}}
+                <div class="flex items-center gap-2 bg-white border border-[var(--c-lt)] rounded-xl px-3 py-2 w-64 focus-within:ring-2 focus-within:ring-[var(--c-md)]/40 focus-within:border-[var(--c-md)] transition-all duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-[var(--c-md)]/50 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
                     <input
                         type="text"
                         x-model="menuSearch"
                         placeholder="Cari nama / kategori..."
-                        class="input-field text-xs py-2 pl-8 pr-8 w-64"
+                        class="flex-1 bg-transparent outline-none text-xs text-[var(--c-dk)] placeholder-[var(--c-lt)] min-w-0"
                     >
                     <button
                         x-show="menuSearch"
                         x-cloak
                         @click="menuSearch = ''"
-                        class="absolute right-2.5 text-[var(--c-md)]/40 hover:text-[var(--c-dk)] transition-colors"
+                        class="shrink-0 text-[var(--c-md)]/40 hover:text-[var(--c-dk)] transition-colors"
                         title="Hapus pencarian"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -811,6 +809,7 @@
                     Tambah Menu
                 </button>
             </div>
+
 
 
             <div class="bg-white rounded-2xl border border-[var(--c-lt)]/30 shadow-sm overflow-hidden">
