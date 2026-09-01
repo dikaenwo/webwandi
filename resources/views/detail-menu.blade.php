@@ -204,22 +204,38 @@ $sizes = [
                 </div>
 
                 {{-- Add to Cart Button --}}
-                <button x-show="$store.cart.tableNumber"
-                        x-cloak
-                        @click="addToCart()"
-                        id="btn-add-to-cart"
-                        class="btn-primary w-full justify-center py-4 text-base rounded-2xl active:scale-95">
-                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-                    Tambah ke Keranjang
-                    <span class="ml-auto font-bold" x-text="'Rp ' + totalPrice.toLocaleString('id-ID')"></span>
-                </button>
+                @if($menu['is_available'])
+                    <button x-show="$store.cart.tableNumber"
+                            x-cloak
+                            @click="addToCart()"
+                            id="btn-add-to-cart"
+                            class="btn-primary w-full justify-center py-4 text-base rounded-2xl active:scale-95">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                        Tambah ke Keranjang
+                        <span class="ml-auto font-bold" x-text="'Rp ' + totalPrice.toLocaleString('id-ID')"></span>
+                    </button>
 
-                <a x-show="$store.cart.tableNumber"
-                   x-cloak
-                   :href="`{{ route('cart') }}${$store.cart.tableNumber ? '?table=' + $store.cart.tableNumber : ''}`" class="btn-secondary w-full justify-center mt-3 py-3.5 rounded-2xl">
-                    <i data-lucide="shopping-cart" class="w-4 h-4"></i>
-                    Lihat Keranjang
-                </a>
+                    <a x-show="$store.cart.tableNumber"
+                       x-cloak
+                       :href="`{{ route('cart') }}${$store.cart.tableNumber ? '?table=' + $store.cart.tableNumber : ''}`" class="btn-secondary w-full justify-center mt-3 py-3.5 rounded-2xl">
+                        <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                        Lihat Keranjang
+                    </a>
+                @else
+                    {{-- Unavailable Notice --}}
+                    <div class="w-full bg-gray-100 border border-gray-200 rounded-2xl p-4 flex items-center gap-3 mb-3">
+                        <i data-lucide="ban" class="w-5 h-5 text-gray-400 shrink-0"></i>
+                        <div>
+                            <p class="font-bold text-gray-500 text-sm">Menu Tidak Tersedia</p>
+                            <p class="text-xs text-gray-400 mt-0.5">Menu ini sedang tidak tersedia untuk dipesan saat ini.</p>
+                        </div>
+                    </div>
+                    <button disabled
+                            class="w-full py-4 text-base rounded-2xl bg-gray-200 text-gray-400 font-bold flex items-center justify-center gap-2 cursor-not-allowed">
+                        <i data-lucide="ban" class="w-5 h-5"></i>
+                        Tidak Tersedia
+                    </button>
+                @endif
             </div>
         </div>
 
