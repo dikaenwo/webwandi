@@ -86,7 +86,7 @@ class MenuController extends Controller
 
         return response()->json([
             'message' => 'Menu berhasil diperbarui',
-            'menu'    => $menu->fresh('category')
+            'menu'    => $menu->fresh()->load('category')
         ]);
     }
 
