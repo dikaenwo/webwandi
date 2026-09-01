@@ -202,9 +202,12 @@ Route::get('/scan/{table}', function ($table) {
     return redirect()->route('menu', ['table' => $table]);
 })->name('scan.qr');
 
-// Menu Listing
+// Menu Listing — tampilkan semua menu; yang tidak tersedia tetap muncul (greyed out)
 Route::get('/menu', function () {
-    $menus = Menu::available()->with('category')->orderBy('sort_order')->get();
+    $menus = Menu::with('category')
+        ->orderByRaw('is_available DESC')   // tersedia duluan
+        ->orderBy('sort_order')
+        ->get();
     $categories = \App\Models\Category::orderBy('sort_order')->get();
     return view('menu', compact('menus', 'categories'));
 })->name('menu');

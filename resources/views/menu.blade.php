@@ -124,7 +124,8 @@
         {{-- Menu Grid --}}
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" x-show="filtered.length > 0">
             <template x-for="item in filtered" :key="item.id">
-                <div class="card card-hover group"
+                <div class="card card-hover group relative"
+                     :class="!item.is_available ? 'opacity-55 grayscale' : ''"
                      :id="'menu-card-' + item.id">
 
                     {{-- Image --}}
@@ -138,7 +139,15 @@
                                     <i data-lucide="coffee" class="w-12 h-12 text-[var(--c-lt)] group-hover:scale-110 transition-transform duration-500"></i>
                                 </div>
                             </template>
-                            <div x-show="item.tag" class="absolute top-2.5 left-2.5">
+                            {{-- Unavailable overlay badge --}}
+                            <template x-if="!item.is_available">
+                                <div class="absolute inset-0 flex items-center justify-center bg-black/30 z-10">
+                                    <span class="bg-white text-gray-700 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow">
+                                        Tidak Tersedia
+                                    </span>
+                                </div>
+                            </template>
+                            <div x-show="item.tag && item.is_available" class="absolute top-2.5 left-2.5">
                                 <span class="bg-[var(--c-lt)] text-[var(--c-dk)] text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide" x-text="item.tag"></span>
                             </div>
                         </div>
@@ -176,7 +185,7 @@
                                     <span class="font-extrabold text-[var(--c-dk)] text-sm" x-text="'Rp ' + (item.price || 0).toLocaleString('id-ID')"></span>
                                 </template>
                             </div>
-                            <button x-show="$store.cart.tableNumber"
+                            <button x-show="$store.cart.tableNumber && item.is_available"
                                     x-cloak
                                     @click.prevent="
                                         if (item.has_hot && item.has_ice) {

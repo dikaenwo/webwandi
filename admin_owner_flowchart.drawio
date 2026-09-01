@@ -1,0 +1,304 @@
+<mxfile host="app.diagrams.net" version="21.0.0" type="device">
+
+  <!-- ============================================================
+       HALAMAN 1 — ADMIN DASHBOARD
+       ============================================================ -->
+  <diagram id="admin_v3" name="[ Admin ] Dashboard">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- JUDUL -->
+        <mxCell id="ttl" value="Flowchart Admin Dashboard — Skena Coffee" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="300" y="14" width="1000" height="36" as="geometry" />
+        </mxCell>
+
+        <!-- CATATAN PENTING -->
+        <mxCell id="note" value="★  Setiap diamond hanya 2 exit: Ya (→ kanan) dan Tidak (↓ bawah)" style="text;html=1;strokeColor=#000000;fillColor=#f9f9f9;align=center;fontSize=11;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="56" width="600" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- LEGENDA -->
+        <mxCell id="legbox" style="rounded=1;fillColor=#f9f9f9;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1648" y="148" width="130" height="198" as="geometry" />
+        </mxCell>
+        <mxCell id="lt0" value="LEGENDA" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1648" y="152" width="130" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="lt1" value="Start / End" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1664" y="176" width="98" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="lt2" value="Proses" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1664" y="212" width="98" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="lt3" value="Input / Output" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#ffffff;strokeColor=#000000;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1664" y="248" width="98" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="lt4" value="Keputusan (2 exit)" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1664" y="284" width="98" height="56" as="geometry" />
+        </mxCell>
+
+        <!-- PEMISAH SEKSI -->
+        <mxCell id="d1" style="line;strokeColor=#000000;fillColor=none;" vertex="1" parent="1"><mxGeometry x="20" y="136" width="1600" height="8" as="geometry" /></mxCell>
+        <mxCell id="d2" style="line;strokeColor=#000000;fillColor=none;" vertex="1" parent="1"><mxGeometry x="20" y="336" width="1600" height="8" as="geometry" /></mxCell>
+        <mxCell id="d3" style="line;strokeColor=#000000;fillColor=none;" vertex="1" parent="1"><mxGeometry x="20" y="556" width="1600" height="8" as="geometry" /></mxCell>
+        <mxCell id="d4" style="line;strokeColor=#000000;fillColor=none;" vertex="1" parent="1"><mxGeometry x="20" y="756" width="1600" height="8" as="geometry" /></mxCell>
+
+        <!-- LABEL SEKSI -->
+        <mxCell id="sl1" value="[ 1 ]  LOGIN &amp; AKSES ADMIN" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontStyle=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="20" y="116" width="300" height="20" as="geometry" /></mxCell>
+        <mxCell id="sl2" value="[ 2 ]  MANAJEMEN KATEGORI &amp; MENU   (Tambah = Ya → kanan  |  Edit/Hapus = Tidak → bawah)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontStyle=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="20" y="316" width="700" height="20" as="geometry" /></mxCell>
+        <mxCell id="sl3" value="[ 3 ]  MANAJEMEN MEJA &amp; QR CODE   (Tambah = Ya → kanan  |  Hapus = Tidak → bawah)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontStyle=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="20" y="536" width="680" height="20" as="geometry" /></mxCell>
+        <mxCell id="sl4" value="[ 4 ]  ANALYTICS &amp; EXPORT" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontStyle=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="20" y="736" width="280" height="20" as="geometry" /></mxCell>
+
+        <!-- ======================================================
+             ROW 1 — LOGIN (y=148, diamond y=138)
+             ====================================================== -->
+        <mxCell id="n1" value="MULAI" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="20" y="148" width="100" height="50" as="geometry" /></mxCell>
+        <mxCell id="n2" value="Buka Halaman&#xa;Login /admin/login" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="140" y="148" width="160" height="50" as="geometry" /></mxCell>
+        <mxCell id="n3" value="Input Email&#xa;&amp; Password" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="320" y="148" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="n4" value="Login&#xa;Valid?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="490" y="138" width="110" height="70" as="geometry" /></mxCell>
+        <mxCell id="n4e" value="Tampilkan&#xa;Pesan Error" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="484" y="262" width="122" height="50" as="geometry" /></mxCell>
+        <mxCell id="n5" value="Role&#xa;Admin?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="620" y="138" width="110" height="70" as="geometry" /></mxCell>
+        <mxCell id="n6" value="Dashboard Admin&#xa;/admin/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="750" y="148" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="n7" value="Tampil Statistik&#xa;(Order, Pendapatan, Aktif)" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="920" y="148" width="200" height="50" as="geometry" /></mxCell>
+        <mxCell id="n8" value="Pilih Menu&#xa;Navigasi" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1140" y="148" width="150" height="50" as="geometry" /></mxCell>
+
+        <mxCell id="en1n2" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="n1" target="n2" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="en2n3" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="n2" target="n3" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="en3n4" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="n3" target="n4" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="en4ya" value="Ya" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="n4" target="n5" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="en4no" value="Tidak" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="n4" target="n4e" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="en4ebk" value="Coba Lagi" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" source="n4e" target="n3" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="424" y="287" /><mxPoint x="395" y="287" /><mxPoint x="395" y="198" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="en5ya" value="Ya" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="n5" target="n6" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="en6n7" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="n6" target="n7" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="en7n8" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="n7" target="n8" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ======================================================
+             ROW 2 — MANAJEMEN KATEGORI & MENU
+             ROW 2a (y=356): Tambah path (main, Ya → kanan)
+             ROW 2b (y=476): Edit/Hapus path (Tidak → bawah)
+             ====================================================== -->
+
+        <!-- 2a Main path -->
+        <mxCell id="b1" value="Pilih Fitur&#xa;Kategori / Menu" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="20" y="356" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="b2" value="Lihat Daftar&#xa;Data yang Ada" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="190" y="356" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="b3" value="Tambah&#xa;Data Baru?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="360" y="346" width="120" height="70" as="geometry" /></mxCell>
+        <mxCell id="b4" value="Input Data Baru&#xa;(Nama, Harga, Foto, dsb.)" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="500" y="356" width="190" height="50" as="geometry" /></mxCell>
+        <mxCell id="b5" value="POST /admin/api/{kategori|menu}&#xa;Data Disimpan ke Database" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="710" y="356" width="210" height="50" as="geometry" /></mxCell>
+        <mxCell id="b6" value="Berhasil Ditambahkan&#xa;Daftar Diperbarui" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="940" y="356" width="170" height="50" as="geometry" /></mxCell>
+
+        <!-- 2b Alt path: Edit/Hapus (Tidak → bawah dari b3) -->
+        <mxCell id="b7" value="Pilih Edit&#xa;atau Hapus Data" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="360" y="476" width="160" height="50" as="geometry" /></mxCell>
+        <mxCell id="b8" value="PUT / DELETE&#xa;/admin/api/{kategori|menu}/{id}" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="540" y="476" width="220" height="50" as="geometry" /></mxCell>
+        <mxCell id="b9" value="Berhasil Diperbarui&#xa;atau Dihapus" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="780" y="476" width="160" height="50" as="geometry" /></mxCell>
+
+        <!-- n8 → b1 snake -->
+        <mxCell id="en8b1" value="Klik Fitur" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="n8" target="b1" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1215" y="326" /><mxPoint x="95" y="326" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="eb1b2" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="b1" target="b2" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eb2b3" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="b2" target="b3" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eb3ya" value="Ya" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="b3" target="b4" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eb4b5" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="b4" target="b5" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eb5b6" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="b5" target="b6" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eb3no" value="Tidak" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="b3" target="b7" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eb7b8" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="b7" target="b8" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eb8b9" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="b8" target="b9" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ======================================================
+             ROW 3 — MANAJEMEN MEJA & QR CODE
+             ROW 3a (y=576): Tambah + QR path (Ya → kanan)
+             ROW 3b (y=696): Hapus path (Tidak → bawah)
+             ====================================================== -->
+
+        <!-- 3a Main path -->
+        <mxCell id="c1" value="Pilih 'Manajemen&#xa;Meja'" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="20" y="576" width="140" height="50" as="geometry" /></mxCell>
+        <mxCell id="c2" value="Lihat Daftar Meja&#xa;&amp; Status" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="180" y="576" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="c3" value="Tambah&#xa;Meja Baru?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="350" y="566" width="120" height="70" as="geometry" /></mxCell>
+        <mxCell id="c4" value="Input Nomor,&#xa;Nama &amp; Kapasitas" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="490" y="576" width="160" height="50" as="geometry" /></mxCell>
+        <mxCell id="c5" value="POST /admin/api/tables&#xa;Meja Ditambahkan" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="670" y="576" width="180" height="50" as="geometry" /></mxCell>
+        <mxCell id="c6" value="Generate QR Code&#xa;URL: /scan/{nomor_meja}" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="870" y="576" width="190" height="50" as="geometry" /></mxCell>
+        <mxCell id="c7" value="Download&#xa;QR PNG?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1080" y="566" width="110" height="70" as="geometry" /></mxCell>
+        <mxCell id="c8" value="Download QR&#xa;sebagai PNG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1210" y="576" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="c9" value="QR Meja Siap&#xa;Digunakan" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1380" y="576" width="150" height="50" as="geometry" /></mxCell>
+
+        <!-- 3b Alt path: Hapus (Tidak → bawah dari c3) -->
+        <mxCell id="c10" value="Konfirmasi&#xa;Hapus Meja?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="350" y="686" width="130" height="70" as="geometry" /></mxCell>
+        <mxCell id="c11" value="DELETE /admin/api/tables/{id}&#xa;Meja Dihapus dari Sistem" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="500" y="696" width="240" height="50" as="geometry" /></mxCell>
+        <mxCell id="c12" value="Meja Berhasil&#xa;Dihapus" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="760" y="696" width="140" height="50" as="geometry" /></mxCell>
+
+        <!-- b6 → c1 snake (from row 2 main end) -->
+        <mxCell id="eb6c1" value="Klik Meja" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="b6" target="c1" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1025" y="546" /><mxPoint x="90" y="546" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="ec1c2" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="c1" target="c2" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec2c3" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="c2" target="c3" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec3ya" value="Ya" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="c3" target="c4" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec4c5" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="c4" target="c5" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec5c6" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="c5" target="c6" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec6c7" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="c6" target="c7" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec7ya" value="Ya" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="c7" target="c8" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec8c9" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="c8" target="c9" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <!-- c7 Tidak → c9 via atas (skip download) -->
+        <mxCell id="ec7no" value="Tidak" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="c7" target="c9" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1135" y="548" /><mxPoint x="1455" y="548" /></Array></mxGeometry>
+        </mxCell>
+        <!-- c3 Tidak → c10 (hapus) -->
+        <mxCell id="ec3no" value="Tidak&#xa;(Hapus)" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="c3" target="c10" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec10ya" value="Ya, Hapus" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="c10" target="c11" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ec11c12" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="c11" target="c12" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ======================================================
+             ROW 4 — ANALYTICS & EXPORT (y=776)
+             ====================================================== -->
+        <mxCell id="dd1" value="Buka Menu&#xa;'Analytics'" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="20" y="776" width="140" height="50" as="geometry" /></mxCell>
+        <mxCell id="dd2" value="Pilih Rentang Waktu&#xa;(Hari/Minggu/Bulan/Custom)" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="180" y="776" width="200" height="50" as="geometry" /></mxCell>
+        <mxCell id="dd3" value="Load Data Analitik&#xa;GET /admin/api/analytics/data" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="400" y="776" width="200" height="50" as="geometry" /></mxCell>
+        <mxCell id="dd4" value="Tampil Grafik &amp; Summary Cards&#xa;(Revenue, Orders, Avg, Top Menu)" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="620" y="776" width="210" height="50" as="geometry" /></mxCell>
+        <mxCell id="dd5" value="Ekspor&#xa;Data?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="850" y="766" width="110" height="70" as="geometry" /></mxCell>
+        <mxCell id="dd6" value="Pilih Format&#xa;Excel / PDF" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="980" y="776" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="dd7" value="Download File&#xa;(export-csv / export-pdf)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1150" y="776" width="180" height="50" as="geometry" /></mxCell>
+        <mxCell id="dd8" value="Klik Logout&#xa;POST /admin/logout" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1350" y="776" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="dd9" value="SELESAI" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1520" y="776" width="100" height="50" as="geometry" /></mxCell>
+
+        <!-- c9 → dd1 snake -->
+        <mxCell id="ec9dd1" value="Klik Analytics" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="c9" target="dd1" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1455" y="748" /><mxPoint x="90" y="748" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="edd1dd2" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="dd1" target="dd2" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edd2dd3" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="dd2" target="dd3" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edd3dd4" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="dd3" target="dd4" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edd4dd5" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="dd4" target="dd5" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edd5ya" value="Ya" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="dd5" target="dd6" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edd6dd7" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="dd6" target="dd7" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edd7dd8" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="dd7" target="dd8" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <!-- dd5 Tidak → dd8 via atas -->
+        <mxCell id="edd5no" value="Tidak" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="dd5" target="dd8" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="905" y="748" /><mxPoint x="1425" y="748" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="edd8dd9" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="dd8" target="dd9" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ============================================================
+       HALAMAN 2 — OWNER DASHBOARD (Read Only)
+       ============================================================ -->
+  <diagram id="owner_v3" name="[ Owner ] Dashboard">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- JUDUL -->
+        <mxCell id="ott" value="Flowchart Owner Dashboard — Skena Coffee" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=16;" vertex="1" parent="1"><mxGeometry x="300" y="14" width="900" height="36" as="geometry" /></mxCell>
+        <mxCell id="robadge" value="Mode Pantau — READ ONLY  ·  Owner tidak dapat mengubah data apapun" style="text;html=1;strokeColor=#000000;fillColor=#f9f9f9;align=center;fontStyle=2+1;fontSize=11;rounded=1;" vertex="1" parent="1"><mxGeometry x="420" y="56" width="520" height="28" as="geometry" /></mxCell>
+        <mxCell id="notebadge" value="★  Setiap diamond hanya 2 exit: Ya (→ kanan) dan Tidak (↓ bawah)" style="text;html=1;strokeColor=#000000;fillColor=#f9f9f9;align=center;fontSize=11;rounded=1;" vertex="1" parent="1"><mxGeometry x="420" y="90" width="520" height="28" as="geometry" /></mxCell>
+
+        <!-- LEGENDA -->
+        <mxCell id="oleg" style="rounded=1;fillColor=#f9f9f9;strokeColor=#000000;" vertex="1" parent="1"><mxGeometry x="1566" y="148" width="112" height="198" as="geometry" /></mxCell>
+        <mxCell id="olt" value="LEGENDA" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=10;" vertex="1" parent="1"><mxGeometry x="1566" y="152" width="112" height="18" as="geometry" /></mxCell>
+        <mxCell id="ol1" value="Start / End" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=9;" vertex="1" parent="1"><mxGeometry x="1580" y="176" width="84" height="26" as="geometry" /></mxCell>
+        <mxCell id="ol2" value="Proses" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=9;" vertex="1" parent="1"><mxGeometry x="1580" y="210" width="84" height="26" as="geometry" /></mxCell>
+        <mxCell id="ol3" value="Input / Output" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#ffffff;strokeColor=#000000;fontSize=9;" vertex="1" parent="1"><mxGeometry x="1580" y="244" width="84" height="26" as="geometry" /></mxCell>
+        <mxCell id="ol4" value="Keputusan (2 exit)" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=9;" vertex="1" parent="1"><mxGeometry x="1580" y="278" width="84" height="56" as="geometry" /></mxCell>
+
+        <!-- PEMISAH -->
+        <mxCell id="od1" style="line;strokeColor=#000000;fillColor=none;" vertex="1" parent="1"><mxGeometry x="20" y="136" width="1530" height="8" as="geometry" /></mxCell>
+        <mxCell id="od2" style="line;strokeColor=#000000;fillColor=none;" vertex="1" parent="1"><mxGeometry x="20" y="346" width="1530" height="8" as="geometry" /></mxCell>
+        <mxCell id="od3" style="line;strokeColor=#000000;fillColor=none;" vertex="1" parent="1"><mxGeometry x="20" y="556" width="1530" height="8" as="geometry" /></mxCell>
+
+        <!-- LABEL SEKSI -->
+        <mxCell id="os1" value="[ 1 ]  LOGIN &amp; AKSES OWNER" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontStyle=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="20" y="116" width="280" height="20" as="geometry" /></mxCell>
+        <mxCell id="os2" value="[ 2 ]  PANTAU STATISTIK &amp; ANALITIK   (Read Only)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontStyle=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="20" y="326" width="420" height="20" as="geometry" /></mxCell>
+        <mxCell id="os3" value="[ 3 ]  LAPORAN &amp; EXPORT   (Ekspor = Ya → kanan  |  Tidak = Tidak → bawah)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontStyle=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="20" y="536" width="560" height="20" as="geometry" /></mxCell>
+
+        <!-- ======================================================
+             ROW 1 — LOGIN OWNER (y=148)
+             ====================================================== -->
+        <mxCell id="o1" value="MULAI" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="20" y="148" width="100" height="50" as="geometry" /></mxCell>
+        <mxCell id="o2" value="Buka Halaman&#xa;Login /admin/login" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="140" y="148" width="160" height="50" as="geometry" /></mxCell>
+        <mxCell id="o3" value="Input Email&#xa;&amp; Password" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="320" y="148" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="o4" value="Login&#xa;Valid?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="490" y="138" width="110" height="70" as="geometry" /></mxCell>
+        <mxCell id="o4e" value="Tampilkan&#xa;Pesan Error" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="484" y="262" width="122" height="50" as="geometry" /></mxCell>
+        <mxCell id="o5" value="Role&#xa;Owner?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="620" y="138" width="110" height="70" as="geometry" /></mxCell>
+        <mxCell id="o6" value="Owner Dashboard&#xa;/owner/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="750" y="148" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="o7" value="Tampil Statistik Ringkas&#xa;(Order, Pendapatan, Avg, Items)" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="920" y="148" width="210" height="50" as="geometry" /></mxCell>
+        <mxCell id="o8" value="Tampil Badge&#xa;'Read-Only Mode'" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1150" y="148" width="160" height="50" as="geometry" /></mxCell>
+
+        <mxCell id="eo1o2" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="o1" target="o2" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eo2o3" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="o2" target="o3" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eo3o4" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="o3" target="o4" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eo4ya" value="Ya" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="o4" target="o5" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eo4no" value="Tidak" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="o4" target="o4e" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eo4ebk" value="Coba Lagi" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" source="o4e" target="o3" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="424" y="287" /><mxPoint x="395" y="287" /><mxPoint x="395" y="198" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="eo5ya" value="Ya" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="o5" target="o6" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eo6o7" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="o6" target="o7" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eo7o8" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="o7" target="o8" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ======================================================
+             ROW 2 — PANTAU STATISTIK (y=366)
+             ====================================================== -->
+        <mxCell id="p1" value="Lihat Statistik Hari Ini&#xa;(Banner Pendapatan)" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="20" y="366" width="180" height="50" as="geometry" /></mxCell>
+        <mxCell id="p2" value="Pilih Rentang&#xa;Periode Analitik" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="220" y="366" width="170" height="50" as="geometry" /></mxCell>
+        <mxCell id="p3" value="Load Data Analitik&#xa;GET /owner/api/analytics/data" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="410" y="366" width="210" height="50" as="geometry" /></mxCell>
+        <mxCell id="p4" value="Tampil Grafik Penjualan&#xa;&amp; Menu Terlaris" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="640" y="366" width="190" height="50" as="geometry" /></mxCell>
+        <mxCell id="p5" value="Tampil Grafik&#xa;Jam Tersibuk" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="850" y="366" width="170" height="50" as="geometry" /></mxCell>
+        <mxCell id="p6" value="Lihat Riwayat 50 Order&#xa;Terakhir (View Only)" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1040" y="366" width="190" height="50" as="geometry" /></mxCell>
+        <mxCell id="p7" value="Filter Status /&#xa;Cari Order ID" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1250" y="366" width="160" height="50" as="geometry" /></mxCell>
+
+        <mxCell id="eo8p1" value="Scroll Dashboard" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="o8" target="p1" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1230" y="326" /><mxPoint x="110" y="326" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="ep1p2" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="p1" target="p2" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep2p3" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="p2" target="p3" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep3p4" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="p3" target="p4" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep4p5" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="p4" target="p5" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep5p6" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="p5" target="p6" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="ep6p7" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="p6" target="p7" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ======================================================
+             ROW 3 — LAPORAN & EXPORT (y=576)
+             ROW 3a: Ekspor (Ya → kanan)
+             ROW 3b: Tidak Ekspor (Tidak → bawah)
+             ====================================================== -->
+        <mxCell id="q1" value="Buka Fitur&#xa;Export Laporan" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="20" y="576" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="q2" value="Pilih Rentang Waktu&#xa;(Preset / Custom)" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="190" y="576" width="170" height="50" as="geometry" /></mxCell>
+        <mxCell id="q3" value="Ekspor&#xa;Data?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="380" y="566" width="110" height="70" as="geometry" /></mxCell>
+        <!-- Ya: ekspor -->
+        <mxCell id="q4" value="Pilih Format&#xa;Excel atau PDF" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="510" y="576" width="160" height="50" as="geometry" /></mxCell>
+        <mxCell id="q5" value="Download File&#xa;/owner/api/export-csv|pdf" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="690" y="576" width="190" height="50" as="geometry" /></mxCell>
+        <mxCell id="q6" value="File Laporan&#xa;Terunduh" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=15;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="900" y="576" width="150" height="50" as="geometry" /></mxCell>
+        <mxCell id="q7" value="Klik Logout&#xa;POST /admin/logout" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="1070" y="576" width="160" height="50" as="geometry" /></mxCell>
+        <mxCell id="q8" value="SELESAI" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1250" y="576" width="100" height="50" as="geometry" /></mxCell>
+
+        <!-- Tidak: skip export, langsung logout -->
+        <mxCell id="q_skip" value="Tidak perlu&#xa;Ekspor Saat Ini" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" vertex="1" parent="1"><mxGeometry x="380" y="686" width="170" height="50" as="geometry" /></mxCell>
+
+        <mxCell id="ep7q1" value="Klik Export" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="p7" target="q1" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1330" y="546" /><mxPoint x="95" y="546" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="eq1q2" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="q1" target="q2" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eq2q3" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="q2" target="q3" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eq3ya" value="Ya" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="q3" target="q4" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eq4q5" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="q4" target="q5" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eq5q6" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="q5" target="q6" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eq6q7" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="q6" target="q7" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eq7q8" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="q7" target="q8" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <!-- q3 Tidak → q_skip → q7 -->
+        <mxCell id="eq3no" value="Tidak" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="q3" target="q_skip" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="eqskipq7" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" source="q_skip" target="q7" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="600" y="711" /><mxPoint x="1150" y="711" /><mxPoint x="1150" y="626" /></Array></mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+</mxfile>
