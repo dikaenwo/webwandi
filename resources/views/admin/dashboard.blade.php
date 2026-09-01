@@ -142,7 +142,7 @@
         this.showMenuModal = true;
     },
     openEditMenu(menu) {
-        this.menuForm = { ...menu, category_id: menu.category_id, image: null }; // Reset image file input, keep old data
+        this.menuForm = { ...menu, category_id: menu.category_id, is_available: menu.is_available ? '1' : '0', image: null }; // Reset image file input, keep old data
         if (this.$refs.imageInput) this.$refs.imageInput.value = '';
         this.showMenuModal = true;
     },
@@ -172,7 +172,7 @@
         formData.append('price', this.menuForm.price || '0');
 
         formData.append('tag', this.menuForm.tag || '');
-        formData.append('is_available', this.menuForm.is_available ? '1' : '0');
+        formData.append('is_available', (this.menuForm.is_available == '1' || this.menuForm.is_available === true) ? '1' : '0');
         if (this.menuForm.image instanceof File) {
             formData.append('image', this.menuForm.image);
         }
@@ -1671,8 +1671,8 @@
                 <div>
                     <label class="block text-xs font-bold text-[var(--c-dk)] mb-1.5">Ketersediaan</label>
                     <select x-model="menuForm.is_available" class="input-field w-full text-sm">
-                        <option :value="true">Tersedia</option>
-                        <option :value="false">Habis</option>
+                        <option value="1">Tersedia</option>
+                        <option value="0">Habis</option>
                     </select>
                 </div>
             </div>
