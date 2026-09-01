@@ -232,6 +232,40 @@
             alert('Gagal menghapus menu');
         }
     },
+    async toggleAvailability(item) {
+        const newVal = !item.is_available;
+        const formData = new FormData();
+        formData.append('name', item.name);
+        formData.append('description', item.description || '');
+        formData.append('category_id', item.category_id);
+        formData.append('has_hot', item.has_hot ? '1' : '0');
+        formData.append('has_ice', item.has_ice ? '1' : '0');
+        formData.append('price', item.price || '0');
+        formData.append('price_hot', item.price_hot || '0');
+        formData.append('price_ice', item.price_ice || '0');
+        formData.append('tag', item.tag || '');
+        formData.append('is_available', newVal ? '1' : '0');
+        try {
+            const response = await fetch('/admin/api/menus/' + item.id, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            });
+            const data = await response.json();
+            if (response.ok) {
+                const index = this.menus.findIndex(m => m.id === item.id);
+                if (index !== -1) this.menus[index] = data.menu;
+            } else {
+                alert('Gagal mengubah status: ' + (data.message || ''));
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Terjadi kesalahan jaringan');
+        }
+    },
     tables: {{ Illuminate\Support\Js::from($tables) }},
     tablesLoading: false,
     async fetchTables() {
@@ -935,9 +969,12 @@
                                     </td>
                                     <td class="table-cell text-xs text-[var(--c-md)]/70" x-text="item.sold + 'x'"></td>
                                     <td class="table-cell">
-                                        <span class="badge text-[10px]"
-                                              :class="item.is_available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
-                                              x-text="item.is_available ? 'Tersedia' : 'Habis'"></span>
+                                        <button @click="toggleAvailability(item)"
+                                                :class="item.is_available ? 'bg-green-100 text-green-700 hover:bg-red-50 hover:text-red-600' : 'bg-red-100 text-red-700 hover:bg-green-50 hover:text-green-600'"
+                                                class="badge text-[10px] transition-colors duration-200 cursor-pointer"
+                                                :title="item.is_available ? 'Klik untuk set Habis' : 'Klik untuk set Tersedia'"
+                                                x-text="item.is_available ? 'Tersedia' : 'Habis'">
+                                        </button>
                                     </td>
                                     <td class="table-cell">
                                         <div class="flex items-center gap-1.5">
